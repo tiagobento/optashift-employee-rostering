@@ -1,9 +1,5 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.calendar;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 import elemental2.dom.CanvasRenderingContext2D;
 import elemental2.dom.MouseEvent;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.twodayview.TwoDayViewPresenter;
@@ -11,12 +7,14 @@ import org.optaplanner.openshift.employeerostering.gwtui.client.canvas.CanvasUti
 import org.optaplanner.openshift.employeerostering.gwtui.client.canvas.ColorUtils;
 import org.optaplanner.openshift.employeerostering.gwtui.client.common.CommonUtils;
 import org.optaplanner.openshift.employeerostering.gwtui.client.css.CssParser;
-import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
 import org.optaplanner.openshift.employeerostering.gwtui.client.resources.css.CssResources;
 import org.optaplanner.openshift.employeerostering.gwtui.client.spot.SpotData;
 import org.optaplanner.openshift.employeerostering.gwtui.client.spot.SpotId;
 import org.optaplanner.openshift.employeerostering.shared.shift.Shift;
 import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlot;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 public class ShiftDrawable extends AbstractDrawable implements TimeRowDrawable<SpotId, ShiftData> {
 
@@ -59,8 +57,8 @@ public class ShiftDrawable extends AbstractDrawable implements TimeRowDrawable<S
         CanvasUtils.drawCurvedRect(g, x, y, duration * view.getWidthPerMinute(), view.getGroupHeight());
 
         CanvasUtils.setFillColor(g, ColorUtils.getTextColor(color));
-        int fontSize = CanvasUtils.fitTextToBox(g, spot.getTitle(), duration * view.getWidthPerMinute() * 0.75, view
-                .getGroupHeight() * 0.75);
+        int fontSize = CanvasUtils.fitTextToBox(g, spot.getTitle(), duration * view.getWidthPerMinute() * 0.75,
+                view.getGroupHeight() * 0.75);
         g.font = CanvasUtils.getFont(fontSize);
         double[] textSize = CanvasUtils.getPreferredBoxSizeForText(g, spot.getTitle(), fontSize);
 
@@ -80,8 +78,7 @@ public class ShiftDrawable extends AbstractDrawable implements TimeRowDrawable<S
     @Override
     public double getLocalY() {
         Integer cursorIndex = view.getCursorIndex(spot);
-        return (null != cursorIndex && cursorIndex > index) ? index * view.getGroupHeight() : (index + 1) * view
-                .getGroupHeight();
+        return (null != cursorIndex && cursorIndex > index) ? index * view.getGroupHeight() : (index + 1) * view.getGroupHeight();
     }
 
     @Override
@@ -96,14 +93,13 @@ public class ShiftDrawable extends AbstractDrawable implements TimeRowDrawable<S
         double end = endTime.toEpochSecond(ZoneOffset.UTC) / 60;
         double duration = end - start;
 
-        if (view.getLocationOfDate(endTime) - x + TwoDayViewPresenter.SPOT_NAME_WIDTH < 30 && y - getGlobalY() - view
-                .getGroupHeight() + 30 > 0) {
+        if (view.getLocationOfDate(endTime) - x + TwoDayViewPresenter.SPOT_NAME_WIDTH < 30
+                && y - getGlobalY() - view.getGroupHeight() + 30 > 0) {
             isMoving = false;
             return PostMouseDownEvent.CAPTURE_DRAG;
         } else {
             isMoving = true;
-            minsOffset = (startTime.toEpochSecond(
-                    ZoneOffset.UTC) - view.getMouseLocalDateTime().toEpochSecond(ZoneOffset.UTC)) / 60;
+            minsOffset = (startTime.toEpochSecond(ZoneOffset.UTC) - view.getMouseLocalDateTime().toEpochSecond(ZoneOffset.UTC)) / 60;
             return PostMouseDownEvent.CAPTURE_DRAG;
         }
     }
@@ -188,8 +184,7 @@ public class ShiftDrawable extends AbstractDrawable implements TimeRowDrawable<S
     }
 
     private String getFillColor() {
-        return CssParser.getCssProperty(CssResources.INSTANCE.calendar(),
-                CssResources.INSTANCE.calendar().spotShiftView(),
+        return CssParser.getCssProperty(CssResources.INSTANCE.calendar(), CssResources.INSTANCE.calendar().spotShiftView(),
                 "background-color");
     }
 

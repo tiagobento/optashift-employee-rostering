@@ -1,11 +1,5 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.canvas;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
 import elemental2.dom.CanvasRenderingContext2D;
 import elemental2.dom.CanvasRenderingContext2D.FillStyleUnionType;
@@ -14,6 +8,12 @@ import elemental2.dom.HTMLCanvasElement;
 import elemental2.dom.MouseEvent;
 import org.optaplanner.openshift.employeerostering.gwtui.client.css.CssParser;
 import org.optaplanner.openshift.employeerostering.gwtui.client.resources.css.CssResources;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CanvasUtils {
 
@@ -31,8 +31,8 @@ public class CanvasUtils {
     }
 
     public static String getFont(int size) {
-        return size + "px " + CssParser.getCssProperty(CssResources.INSTANCE.calendar(), CssResources.INSTANCE
-                .calendar().main(), "font-family");
+        return size + "px " + CssParser.getCssProperty(CssResources.INSTANCE.calendar(), CssResources.INSTANCE.calendar().main(),
+                "font-family");
     }
 
     public static int fitTextToBox(CanvasRenderingContext2D g, String text, double w, double h) {
@@ -74,8 +74,7 @@ public class CanvasUtils {
         return out;
     }
 
-    public static void drawTextInBox(CanvasRenderingContext2D g, String text, double x, double y, double width,
-            double height) {
+    public static void drawTextInBox(CanvasRenderingContext2D g, String text, double x, double y, double width, double height) {
         String[] words = text.split("\\s");
         if (words.length < 1) {
             return;
@@ -142,7 +141,7 @@ public class CanvasUtils {
             double width = g.measureText(line).width;
             maxWidth = Math.max(width, maxWidth);
         }
-        return new double[]{maxWidth, (1 + lines.length) * lineHeight};
+        return new double[] { maxWidth, (1 + lines.length) * lineHeight };
     }
 
     private static List<String> splitWord(CanvasRenderingContext2D g, String word, double width) {
@@ -209,10 +208,7 @@ public class CanvasUtils {
     }
 
     public static enum Glyphs {
-        ADD(false, 0x2b),
-        EDIT(true, 0xe065),
-        LOCK(true, 0xe033),
-        REMOVE(true, 0xe014);
+        ADD(false, 0x2b), EDIT(true, 0xe065), LOCK(true, 0xe033), REMOVE(true, 0xe014);
 
         boolean useHalflings;
         int unicode;
@@ -271,22 +267,29 @@ public class CanvasUtils {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if (this == obj) {
                 return true;
-            if (obj == null)
+            }
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
+            }
             DrawnText other = (DrawnText) obj;
-            if (Double.doubleToLongBits(h) != Double.doubleToLongBits(other.h))
+            if (Double.doubleToLongBits(h) != Double.doubleToLongBits(other.h)) {
                 return false;
+            }
             if (text == null) {
-                if (other.text != null)
+                if (other.text != null) {
                     return false;
-            } else if (!text.equals(other.text))
+                }
+            } else if (!text.equals(other.text)) {
                 return false;
-            if (Double.doubleToLongBits(w) != Double.doubleToLongBits(other.w))
+            }
+            if (Double.doubleToLongBits(w) != Double.doubleToLongBits(other.w)) {
                 return false;
+            }
             return true;
         }
     }

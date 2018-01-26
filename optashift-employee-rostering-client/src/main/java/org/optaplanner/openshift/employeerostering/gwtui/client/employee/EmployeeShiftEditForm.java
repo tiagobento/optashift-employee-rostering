@@ -1,28 +1,16 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.employee;
 
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.CheckBox;
 import org.gwtbootstrap3.client.ui.ListBox;
-import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
-import org.gwtbootstrap3.client.ui.html.Div;
 import org.jboss.errai.ui.client.local.api.IsElement;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.twodayview.TwoDayView;
 import org.optaplanner.openshift.employeerostering.gwtui.client.common.FailureShownRestCallback;
 import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
 import org.optaplanner.openshift.employeerostering.gwtui.client.popups.FormPopup;
@@ -33,6 +21,11 @@ import org.optaplanner.openshift.employeerostering.shared.shift.ShiftRestService
 import org.optaplanner.openshift.employeerostering.shared.shift.view.ShiftView;
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
 import org.optaplanner.openshift.employeerostering.shared.spot.SpotRestServiceBuilder;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
 
 @Templated
 public class EmployeeShiftEditForm implements IsElement {
@@ -63,7 +56,8 @@ public class EmployeeShiftEditForm implements IsElement {
 
     @Inject
     @DataField
-    private @Named(value = "h3") HeadingElement title;
+    private @Named(value = "h3")
+    HeadingElement title;
 
     @Inject
     private TranslationService CONSTANTS;
@@ -76,8 +70,7 @@ public class EmployeeShiftEditForm implements IsElement {
 
     public static EmployeeShiftEditForm create(EmployeeDrawable employeeData) {
         employee = employeeData;
-        return (EmployeeShiftEditForm) employeeData.getCalendarView().getCalendar().getInstanceOf(
-                EmployeeShiftEditForm.class);
+        return (EmployeeShiftEditForm) employeeData.getCalendarView().getCalendar().getInstanceOf(EmployeeShiftEditForm.class);
     }
 
     @PostConstruct
@@ -90,9 +83,7 @@ public class EmployeeShiftEditForm implements IsElement {
                 .appendEscaped(employee.getData().getEndTime().toLocalTime().toString())
                 .toSafeHtml());
         EmployeeShiftEditForm form = this;
-        SpotRestServiceBuilder.getSpotList(employee.getData().getShift().getTenantId(), new FailureShownRestCallback<
-                List<
-                        Spot>>() {
+        SpotRestServiceBuilder.getSpotList(employee.getData().getShift().getTenantId(), new FailureShownRestCallback<List<Spot>>() {
 
             @Override
             public void onSuccess(List<Spot> tenantSpotList) {
@@ -108,8 +99,8 @@ public class EmployeeShiftEditForm implements IsElement {
                 int index = 0;
                 for (EmployeeAvailabilityState availabilityState : EmployeeAvailabilityState.values()) {
                     employeeAvaliability.addItem(availabilityState.toString());
-                    if (null != employee.getData().getAvailability() && availabilityState.equals(employee.getData()
-                            .getAvailability().getState())) {
+                    if (null != employee.getData().getAvailability() && availabilityState.equals(
+                            employee.getData().getAvailability().getState())) {
                         employeeAvaliability.setSelectedIndex(index);
                     }
                     index++;
@@ -141,11 +132,10 @@ public class EmployeeShiftEditForm implements IsElement {
         try {
             state = EmployeeAvailabilityState.valueOf(employeeAvaliability.getSelectedValue());
             if (null == employee.getData().getAvailability()) {
-                EmployeeAvailabilityView availabilityView = new EmployeeAvailabilityView(employee.getData().getShift()
-                        .getTenantId(), employee.getData().getEmployee(), employee.getData().getShift().getTimeSlot(),
-                        state);
-                EmployeeRestServiceBuilder.addEmployeeAvailability(employee.getData().getShift().getTenantId(),
-                        availabilityView, new FailureShownRestCallback<Long>() {
+                EmployeeAvailabilityView availabilityView = new EmployeeAvailabilityView(employee.getData().getShift().getTenantId(),
+                        employee.getData().getEmployee(), employee.getData().getShift().getTimeSlot(), state);
+                EmployeeRestServiceBuilder.addEmployeeAvailability(employee.getData().getShift().getTenantId(), availabilityView,
+                        new FailureShownRestCallback<Long>() {
 
                             @Override
                             public void onSuccess(Long id) {
@@ -154,8 +144,7 @@ public class EmployeeShiftEditForm implements IsElement {
                         });
             } else {
                 employee.getData().getAvailability().setState(state);
-                EmployeeRestServiceBuilder.updateEmployeeAvailability(employee.getData().getAvailability()
-                        .getTenantId(),
+                EmployeeRestServiceBuilder.updateEmployeeAvailability(employee.getData().getAvailability().getTenantId(),
                         employee.getData().getAvailability(), new FailureShownRestCallback<Void>() {
 
                             @Override
@@ -166,8 +155,7 @@ public class EmployeeShiftEditForm implements IsElement {
             }
         } catch (IllegalArgumentException error) {
             if (employee.getData().getAvailability() != null) {
-                EmployeeRestServiceBuilder.removeEmployeeAvailability(employee.getData().getAvailability()
-                        .getTenantId(),
+                EmployeeRestServiceBuilder.removeEmployeeAvailability(employee.getData().getAvailability().getTenantId(),
                         employee.getData().getAvailability().getId(), new FailureShownRestCallback<Boolean>() {
 
                             @Override
@@ -179,17 +167,19 @@ public class EmployeeShiftEditForm implements IsElement {
         }
 
         if (isLocked.getValue()) {
-            Spot spot = spotList.stream().filter((m_employee) -> m_employee.getName().equals(assignedSpot
-                    .getSelectedValue()))
-                    .findFirst().get();
+            Spot spot = spotList.stream()
+                    .filter((m_employee) -> m_employee.getName().equals(assignedSpot.getSelectedValue()))
+                    .findFirst()
+                    .get();
             popup.hide();
-            ShiftRestServiceBuilder.getShifts(spot.getTenantId(), new FailureShownRestCallback<List<
-                    ShiftView>>() {
+            ShiftRestServiceBuilder.getShifts(spot.getTenantId(), new FailureShownRestCallback<List<ShiftView>>() {
 
                 @Override
                 public void onSuccess(List<ShiftView> shifts) {
-                    ShiftView shift = shifts.stream().filter((s) -> s.getSpotId().equals(spot.getId()) && s
-                            .getTimeSlotId().equals(employee.getData().getShift().getTimeSlot().getId())).findFirst()
+                    ShiftView shift = shifts.stream()
+                            .filter((s) -> s.getSpotId().equals(spot.getId()) && s.getTimeSlotId()
+                                    .equals(employee.getData().getShift().getTimeSlot().getId()))
+                            .findFirst()
                             .orElseGet(() -> null);
                     if (null != shift) {
                         employee.getData().getShift().setLockedByUser(false);
@@ -203,9 +193,8 @@ public class EmployeeShiftEditForm implements IsElement {
 
                                         @Override
                                         public void onSuccess(Void result) {
-                                            ShiftRestServiceBuilder.updateShift(employee.getData().getShift()
-                                                    .getTenantId(),
-                                                    shift, new FailureShownRestCallback<Void>() {
+                                            ShiftRestServiceBuilder.updateShift(employee.getData().getShift().getTenantId(), shift,
+                                                    new FailureShownRestCallback<Void>() {
 
                                                         @Override
                                                         public void onSuccess(Void result2) {
@@ -228,8 +217,9 @@ public class EmployeeShiftEditForm implements IsElement {
                         }
 
                     } else {
-                        ErrorPopup.show("Cannot find shift with spot " + spot.getName() + " for timeslot "
-                                + employee.getData().getShift().getTimeSlot());
+                        ErrorPopup.show("Cannot find shift with spot " + spot.getName() + " for timeslot " + employee.getData()
+                                .getShift()
+                                .getTimeSlot());
                     }
                 }
             });

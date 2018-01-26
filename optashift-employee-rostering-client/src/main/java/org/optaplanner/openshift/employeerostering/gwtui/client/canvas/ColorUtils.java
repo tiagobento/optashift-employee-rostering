@@ -1,7 +1,5 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.canvas;
 
-import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
-
 public class ColorUtils {
 
     private static final double GOLDEN_RATIO = (1.0 + Math.sqrt(5)) / 2.0;
@@ -16,9 +14,9 @@ public class ColorUtils {
         int[] rgb2 = getRGB(color2);
         double rgb1amount = 1 - rgb2amount;
 
-        return getHexFromRGB(new int[]{(int) Math.round(rgb1[0] * rgb1amount + rgb2[0] * rgb2amount),
-                (int) Math.round(rgb1[1] * rgb1amount + rgb2[1] * rgb2amount),
-                (int) Math.round(rgb1[2] * rgb1amount + rgb2[2] * rgb2amount)});
+        return getHexFromRGB(new int[] { (int) Math.round(rgb1[0] * rgb1amount + rgb2[0] * rgb2amount),
+                                         (int) Math.round(rgb1[1] * rgb1amount + rgb2[1] * rgb2amount),
+                                         (int) Math.round(rgb1[2] * rgb1amount + rgb2[2] * rgb2amount) });
     }
 
     public static String getColor(int num) {
@@ -67,14 +65,14 @@ public class ColorUtils {
         String red = hex.substring(1, 3);
         String green = hex.substring(3, 5);
         String blue = hex.substring(5, 7);
-        return new int[]{Integer.parseInt(red, 16), Integer.parseInt(green, 16), Integer.parseInt(blue, 16)};
+        return new int[] { Integer.parseInt(red, 16), Integer.parseInt(green, 16), Integer.parseInt(blue, 16) };
     }
 
     public static int[] getRGBFromRGB(String rgb) {
         String[] values = rgb.substring(4).split(",");
-        return new int[]{Integer.parseInt(values[0].trim()),
-                Integer.parseInt(values[1].trim()),
-                Integer.parseInt(values[2].substring(0, values[2].indexOf(')')).trim())};
+        return new int[] { Integer.parseInt(values[0].trim()),
+                           Integer.parseInt(values[1].trim()),
+                           Integer.parseInt(values[2].substring(0, values[2].indexOf(')')).trim()) };
     }
 
     public static String getHexFromRGB(int[] rgb) {

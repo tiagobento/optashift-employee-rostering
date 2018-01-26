@@ -1,21 +1,14 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.popups;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import org.gwtbootstrap3.client.ui.html.Span;
 import org.optaplanner.openshift.employeerostering.gwtui.client.resources.css.CssResources;
-import org.optaplanner.openshift.employeerostering.gwtui.client.resources.images.ImageResources;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class LoadingPopup extends PopupPanel {
 
@@ -34,9 +27,7 @@ public class LoadingPopup extends PopupPanel {
 
         HorizontalPanel horizontalSubpanel = new HorizontalPanel();
         Span loadingIcon = new Span();
-        loadingIcon.getElement().setAttribute("class", "glyphicon glyphicon-refresh " + CssResources.INSTANCE
-                .loadingIcon()
-                .spin());
+        loadingIcon.getElement().setAttribute("class", "glyphicon glyphicon-refresh " + CssResources.INSTANCE.loadingIcon().spin());
 
         horizontalSubpanel.add(loadingIcon);
 

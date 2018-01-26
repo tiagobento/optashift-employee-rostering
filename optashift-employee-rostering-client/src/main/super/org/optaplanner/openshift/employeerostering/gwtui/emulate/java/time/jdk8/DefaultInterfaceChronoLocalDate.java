@@ -31,13 +31,6 @@
  */
 package java.time.jdk8;
 
-import static java.time.calendrical.ChronoField.DAY_OF_MONTH;
-import static java.time.calendrical.ChronoField.EPOCH_DAY;
-import static java.time.calendrical.ChronoField.ERA;
-import static java.time.calendrical.ChronoField.MONTH_OF_YEAR;
-import static java.time.calendrical.ChronoField.YEAR;
-import static java.time.calendrical.ChronoField.YEAR_OF_ERA;
-
 import java.time.LocalTime;
 import java.time.calendrical.ChronoField;
 import java.time.calendrical.DateTime;
@@ -48,156 +41,169 @@ import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoLocalDateTime;
 import java.time.chrono.Era;
 
+import static java.time.calendrical.ChronoField.DAY_OF_MONTH;
+import static java.time.calendrical.ChronoField.EPOCH_DAY;
+import static java.time.calendrical.ChronoField.ERA;
+import static java.time.calendrical.ChronoField.MONTH_OF_YEAR;
+import static java.time.calendrical.ChronoField.YEAR;
+import static java.time.calendrical.ChronoField.YEAR_OF_ERA;
+
 /**
  * A temporary class providing implementations that will become default interface methods once integrated into
  * JDK 8.
- * 
+ *
  * @param <C> the chronology of this date-time
  */
-public abstract class DefaultInterfaceChronoLocalDate<C extends Chrono<C>> extends DefaultInterfaceDateTime implements
-    ChronoLocalDate<C> {
+public abstract class DefaultInterfaceChronoLocalDate<C extends Chrono<C>> extends DefaultInterfaceDateTime implements ChronoLocalDate<C> {
 
-  @Override
-  public Era<C> getEra() {
+    @Override
+    public Era<C> getEra() {
 
-    return getChrono().eraOf(get(ERA));
-  }
-
-  @Override
-  public boolean isLeapYear() {
-
-    return getChrono().isLeapYear(getLong(YEAR));
-  }
-
-  @Override
-  public int lengthOfYear() {
-
-    return (isLeapYear() ? 366 : 365);
-  }
-
-  @Override
-  public boolean isSupported(DateTimeField field) {
-
-    if (field instanceof ChronoField) {
-      return ((ChronoField) field).isDateField();
+        return getChrono().eraOf(get(ERA));
     }
-    return field != null && field.doIsSupported(this);
-  }
 
-  // -------------------------------------------------------------------------
-  @Override
-  public ChronoLocalDate<C> with(WithAdjuster adjuster) {
+    @Override
+    public boolean isLeapYear() {
 
-    return getChrono().ensureChronoLocalDate(super.with(adjuster));
-  }
-
-  @Override
-  public ChronoLocalDate<C> plus(PlusAdjuster adjuster) {
-
-    return getChrono().ensureChronoLocalDate(super.plus(adjuster));
-  }
-
-  @Override
-  public ChronoLocalDate<C> minus(MinusAdjuster adjuster) {
-
-    return getChrono().ensureChronoLocalDate(super.minus(adjuster));
-  }
-
-  @Override
-  public ChronoLocalDate<C> minus(long amountToSubtract, PeriodUnit unit) {
-
-    return getChrono().ensureChronoLocalDate(super.minus(amountToSubtract, unit));
-  }
-
-  // -------------------------------------------------------------------------
-  @Override
-  public DateTime doWithAdjustment(DateTime dateTime) {
-
-    return dateTime.with(EPOCH_DAY, toEpochDay());
-  }
-
-  @Override
-  public ChronoLocalDateTime<C> atTime(LocalTime localTime) {
-
-    return Chrono.dateTime(this, localTime);
-  }
-
-  @Override
-  public <R> R query(Query<R> query) {
-
-    if (query == Query.CHRONO) {
-      return (R) getChrono();
+        return getChrono().isLeapYear(getLong(YEAR));
     }
-    return super.query(query);
-  }
 
-  @Override
-  public long toEpochDay() {
+    @Override
+    public int lengthOfYear() {
 
-    return getLong(EPOCH_DAY);
-  }
-
-  // -------------------------------------------------------------------------
-  @Override
-  public int compareTo(ChronoLocalDate<?> other) {
-
-    int cmp = Jdk7Methods.Long_compare(toEpochDay(), other.toEpochDay());
-    if (cmp == 0) {
-      cmp = getChrono().compareTo(other.getChrono());
+        return (isLeapYear() ? 366 : 365);
     }
-    return cmp;
-  }
 
-  @Override
-  public boolean isAfter(ChronoLocalDate<?> other) {
+    @Override
+    public boolean isSupported(DateTimeField field) {
 
-    return this.toEpochDay() > other.toEpochDay();
-  }
-
-  @Override
-  public boolean isBefore(ChronoLocalDate<?> other) {
-
-    return this.toEpochDay() < other.toEpochDay();
-  }
-
-  @Override
-  public boolean isEqual(ChronoLocalDate<?> other) {
-
-    return this.toEpochDay() == other.toEpochDay();
-  }
-
-  // -------------------------------------------------------------------------
-  @Override
-  public boolean equals(Object obj) {
-
-    if (this == obj) {
-      return true;
+        if (field instanceof ChronoField) {
+            return ((ChronoField) field).isDateField();
+        }
+        return field != null && field.doIsSupported(this);
     }
-    if (obj instanceof ChronoLocalDate) {
-      return compareTo((ChronoLocalDate<?>) obj) == 0;
+
+    // -------------------------------------------------------------------------
+    @Override
+    public ChronoLocalDate<C> with(WithAdjuster adjuster) {
+
+        return getChrono().ensureChronoLocalDate(super.with(adjuster));
     }
-    return false;
-  }
 
-  @Override
-  public int hashCode() {
+    @Override
+    public ChronoLocalDate<C> plus(PlusAdjuster adjuster) {
 
-    long epDay = toEpochDay();
-    return getChrono().hashCode() ^ ((int) (epDay ^ (epDay >>> 32)));
-  }
+        return getChrono().ensureChronoLocalDate(super.plus(adjuster));
+    }
 
-  // -------------------------------------------------------------------------
-  @Override
-  public String toString() {
+    @Override
+    public ChronoLocalDate<C> minus(MinusAdjuster adjuster) {
 
-    // getLong() reduces chances of exceptions in toString()
-    long yoe = getLong(YEAR_OF_ERA);
-    long moy = getLong(MONTH_OF_YEAR);
-    long dom = getLong(DAY_OF_MONTH);
-    StringBuilder buf = new StringBuilder(30);
-    buf.append(getChrono().toString()).append(" ").append(getEra()).append(" ").append(yoe)
-        .append(moy < 10 ? "-0" : "-").append(moy).append(dom < 10 ? "-0" : "-").append(dom);
-    return buf.toString();
-  }
+        return getChrono().ensureChronoLocalDate(super.minus(adjuster));
+    }
+
+    @Override
+    public ChronoLocalDate<C> minus(long amountToSubtract, PeriodUnit unit) {
+
+        return getChrono().ensureChronoLocalDate(super.minus(amountToSubtract, unit));
+    }
+
+    // -------------------------------------------------------------------------
+    @Override
+    public DateTime doWithAdjustment(DateTime dateTime) {
+
+        return dateTime.with(EPOCH_DAY, toEpochDay());
+    }
+
+    @Override
+    public ChronoLocalDateTime<C> atTime(LocalTime localTime) {
+
+        return Chrono.dateTime(this, localTime);
+    }
+
+    @Override
+    public <R> R query(Query<R> query) {
+
+        if (query == Query.CHRONO) {
+            return (R) getChrono();
+        }
+        return super.query(query);
+    }
+
+    @Override
+    public long toEpochDay() {
+
+        return getLong(EPOCH_DAY);
+    }
+
+    // -------------------------------------------------------------------------
+    @Override
+    public int compareTo(ChronoLocalDate<?> other) {
+
+        int cmp = Jdk7Methods.Long_compare(toEpochDay(), other.toEpochDay());
+        if (cmp == 0) {
+            cmp = getChrono().compareTo(other.getChrono());
+        }
+        return cmp;
+    }
+
+    @Override
+    public boolean isAfter(ChronoLocalDate<?> other) {
+
+        return this.toEpochDay() > other.toEpochDay();
+    }
+
+    @Override
+    public boolean isBefore(ChronoLocalDate<?> other) {
+
+        return this.toEpochDay() < other.toEpochDay();
+    }
+
+    @Override
+    public boolean isEqual(ChronoLocalDate<?> other) {
+
+        return this.toEpochDay() == other.toEpochDay();
+    }
+
+    // -------------------------------------------------------------------------
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof ChronoLocalDate) {
+            return compareTo((ChronoLocalDate<?>) obj) == 0;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+
+        long epDay = toEpochDay();
+        return getChrono().hashCode() ^ ((int) (epDay ^ (epDay >>> 32)));
+    }
+
+    // -------------------------------------------------------------------------
+    @Override
+    public String toString() {
+
+        // getLong() reduces chances of exceptions in toString()
+        long yoe = getLong(YEAR_OF_ERA);
+        long moy = getLong(MONTH_OF_YEAR);
+        long dom = getLong(DAY_OF_MONTH);
+        StringBuilder buf = new StringBuilder(30);
+        buf.append(getChrono().toString())
+                .append(" ")
+                .append(getEra())
+                .append(" ")
+                .append(yoe)
+                .append(moy < 10 ? "-0" : "-")
+                .append(moy)
+                .append(dom < 10 ? "-0" : "-")
+                .append(dom);
+        return buf.toString();
+    }
 
 }

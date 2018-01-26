@@ -17,7 +17,5 @@
 package org.optaplanner.openshift.employeerostering.shared.timeslot;
 
 public enum TimeSlotState {
-    HISTORY,
-    TENTATIVE,
-    DRAFT
+    HISTORY, TENTATIVE, DRAFT
 }

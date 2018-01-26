@@ -15,10 +15,7 @@ public class OptashiftExceptionMapper implements ExceptionMapper<Exception> {
         for (StackTraceElement trace : exception.getStackTrace()) {
             builder.append(trace.toString()).append('\n');
         }
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .type(MediaType.TEXT_PLAIN)
-                .entity(builder.toString())
-                .build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type(MediaType.TEXT_PLAIN).entity(builder.toString()).build();
     }
 
 }

@@ -1,8 +1,8 @@
 package org.optaplanner.openshift.employeerostering.shared.lang.tokens;
 
-import javax.persistence.Entity;
-
 import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+
+import javax.persistence.Entity;
 
 /**
  * Specifics if {@link IdOrGroup#itemId} refers to an individual entity or a group.<br>
@@ -37,6 +37,7 @@ public class IdOrGroup extends AbstractPersistable {
 
     /**
      * Getter for {@link IdOrGroup#isGroup}
+     *
      * @return Value of {@link IdOrGroup#isGroup}
      */
     public boolean getIsGroup() {
@@ -45,6 +46,7 @@ public class IdOrGroup extends AbstractPersistable {
 
     /**
      * Getter for {@link IdOrGroup#itemId}
+     *
      * @return Value of {@link IdOrGroup#itemId}
      */
     public Long getItemId() {
@@ -53,7 +55,7 @@ public class IdOrGroup extends AbstractPersistable {
 
     /**
      * Setter for {@link IdOrGroup#isGroup}
-     * 
+     *
      * @param isGroup Value to set {@link IdOrGroup#isGroup} to
      */
     public void setIsGroup(boolean isGroup) {
@@ -62,7 +64,7 @@ public class IdOrGroup extends AbstractPersistable {
 
     /**
      * Setter for {@link IdOrGroup#itemId}
-     * 
+     *
      * @param id Value to set {@link IdOrGroup#itemId} to
      */
     public void setItemId(Long id) {

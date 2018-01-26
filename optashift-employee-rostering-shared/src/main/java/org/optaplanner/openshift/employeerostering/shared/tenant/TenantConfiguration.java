@@ -1,11 +1,10 @@
 package org.optaplanner.openshift.employeerostering.shared.tenant;
 
-import java.time.DayOfWeek;
+import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
-
-import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+import java.time.DayOfWeek;
 
 @Entity
 public class TenantConfiguration extends AbstractPersistable {
@@ -24,8 +23,11 @@ public class TenantConfiguration extends AbstractPersistable {
         super(-1);
     }
 
-    public TenantConfiguration(Integer tenantId, Integer templateDuration, DayOfWeek weekStart,
-                               Integer undesiredTimeSlotWeight, Integer desiredTimeSlotWeight) {
+    public TenantConfiguration(Integer tenantId,
+            Integer templateDuration,
+            DayOfWeek weekStart,
+            Integer undesiredTimeSlotWeight,
+            Integer desiredTimeSlotWeight) {
         super(tenantId);
         this.templateDuration = templateDuration;
         this.weekStart = weekStart;

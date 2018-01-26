@@ -16,23 +16,6 @@
 
 package org.optaplanner.openshift.employeerostering.server.roster;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-
 import org.optaplanner.openshift.employeerostering.server.common.generator.StringDataGenerator;
 import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
 import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeAvailability;
@@ -49,6 +32,22 @@ import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
 import org.optaplanner.openshift.employeerostering.shared.tenant.Tenant;
 import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlot;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
 @Singleton
 @Startup
 public class RosterGenerator {
@@ -57,25 +56,9 @@ public class RosterGenerator {
     private final StringDataGenerator employeeNameGenerator = StringDataGenerator.buildFullNames();
     private final StringDataGenerator spotNameGenerator = StringDataGenerator.buildAssemblyLineNames();
 
-    private final StringDataGenerator skillNameGenerator = new StringDataGenerator()
-                                                                                    .addPart(
-                                                                                             "Mechanical",
-                                                                                             "Electrical",
-                                                                                             "Safety",
-                                                                                             "Transportation",
-                                                                                             "Operational",
-                                                                                             "Physics",
-                                                                                             "Monitoring",
-                                                                                             "ICT")
-                                                                                    .addPart(
-                                                                                             "bachelor",
-                                                                                             "engineer",
-                                                                                             "instructor",
-                                                                                             "coordinator",
-                                                                                             "manager",
-                                                                                             "expert",
-                                                                                             "inspector",
-                                                                                             "analyst");
+    private final StringDataGenerator skillNameGenerator = new StringDataGenerator().addPart("Mechanical", "Electrical", "Safety",
+            "Transportation", "Operational", "Physics", "Monitoring", "ICT")
+            .addPart("bachelor", "engineer", "instructor", "coordinator", "manager", "expert", "inspector", "analyst");
 
     private Random random = new Random(37);
 
@@ -86,10 +69,12 @@ public class RosterGenerator {
     private ShiftRestService shiftRestService;
 
     @SuppressWarnings("unused")
-    public RosterGenerator() {}
+    public RosterGenerator() {
+    }
 
     /**
      * For benchmark only
+     *
      * @param entityManager never null
      */
     public RosterGenerator(EntityManager entityManager) {
@@ -124,8 +109,8 @@ public class RosterGenerator {
         LocalDateTime previousEndDateTime = LocalDateTime.of(2017, 2, 1, 6, 0);
         for (int i = 0; i < timeSlotListSize; i += 7) {
             try {
-                shiftRestService.addShiftsFromTemplate(tenantId, previousEndDateTime.toString(), previousEndDateTime
-                                                                                                                    .plusDays(7).toString());
+                shiftRestService.addShiftsFromTemplate(tenantId, previousEndDateTime.toString(),
+                        previousEndDateTime.plusDays(7).toString());
                 previousEndDateTime = previousEndDateTime.plusWeeks(1);
             } catch (Exception e) {
                 throw new IllegalStateException(e);
@@ -134,23 +119,20 @@ public class RosterGenerator {
         }
 
         List<TimeSlot> timeSlotList = entityManager.createNamedQuery("TimeSlot.findAll", TimeSlot.class)
-                                                   .setParameter("tenantId", tenantId)
-                                                   .getResultList();
+                .setParameter("tenantId", tenantId)
+                .getResultList();
 
         List<Shift> shiftList = entityManager.createNamedQuery("Shift.findAll", Shift.class)
-                                             .setParameter("tenantId", tenantId)
-                                             .getResultList();
+                .setParameter("tenantId", tenantId)
+                .getResultList();
 
-        List<EmployeeAvailability> employeeAvailabilityList = entityManager
-                                                                           .createNamedQuery("EmployeeAvailability.findAll", EmployeeAvailability.class)
-                                                                           .setParameter("tenantId", tenantId)
-                                                                           .getResultList();
+        List<EmployeeAvailability> employeeAvailabilityList = entityManager.createNamedQuery("EmployeeAvailability.findAll",
+                EmployeeAvailability.class).setParameter("tenantId", tenantId).getResultList();
 
         Tenant tenant = entityManager.find(Tenant.class, tenantId);
 
-        return new Roster((long) tenantId, tenantId,
-                          skillList, spotList, employeeList, timeSlotList, employeeAvailabilityList,
-                          tenant.getConfiguration(), shiftList);
+        return new Roster((long) tenantId, tenantId, skillList, spotList, employeeList, timeSlotList, employeeAvailabilityList,
+                tenant.getConfiguration(), shiftList);
     }
 
     private List<ShiftInfo> generateShiftTemplate(Integer tenantId, List<Spot> spots, List<Employee> employees) {
@@ -212,7 +194,8 @@ public class RosterGenerator {
     }
 
     private Integer createTenant(int spotListSize, int employeeListSize) {
-        Tenant tenant = new Tenant(tenantNameGenerator.generateNextValue() + " (" + employeeListSize + " employees, " + spotListSize + "spots)");
+        Tenant tenant = new Tenant(
+                tenantNameGenerator.generateNextValue() + " (" + employeeListSize + " employees, " + spotListSize + "spots)");
         entityManager.persist(tenant);
         return tenant.getId();
     }
@@ -247,10 +230,9 @@ public class RosterGenerator {
         for (int i = 0; i < size; i++) {
             String name = employeeNameGenerator.generateNextValue();
             Employee employee = new Employee(tenantId, name);
-            employee.setSkillProficiencySet(
-                                             extractRandomSubList(generalSkillList, 1.0).stream()
-                                                                                        .map(skill -> new EmployeeSkillProficiency(tenantId, employee, skill))
-                            .collect(Collectors.toCollection(HashSet::new)));
+            employee.setSkillProficiencySet(extractRandomSubList(generalSkillList, 1.0).stream()
+                    .map(skill -> new EmployeeSkillProficiency(tenantId, employee, skill))
+                    .collect(Collectors.toCollection(HashSet::new)));
             entityManager.persist(employee);
             employeeList.add(employee);
         }

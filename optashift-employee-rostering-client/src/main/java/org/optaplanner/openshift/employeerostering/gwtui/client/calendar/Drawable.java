@@ -33,8 +33,6 @@ public interface Drawable {
     public boolean onMouseUp(MouseEvent e, double x, double y);
 
     public enum PostMouseDownEvent {
-        REMOVE_FOCUS,
-        CAPTURE_DRAG,
-        IGNORE
+        REMOVE_FOCUS, CAPTURE_DRAG, IGNORE
     }
 }

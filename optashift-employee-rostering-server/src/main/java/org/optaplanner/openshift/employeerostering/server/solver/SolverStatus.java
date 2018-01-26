@@ -17,7 +17,5 @@
 package org.optaplanner.openshift.employeerostering.server.solver;
 
 public enum SolverStatus {
-    SCHEDULED,
-    SOLVING,
-    TERMINATED
+    SCHEDULED, SOLVING, TERMINATED
 }

@@ -1,11 +1,11 @@
 package org.optaplanner.openshift.employeerostering.shared.lang.tokens;
 
+import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+import org.optaplanner.openshift.employeerostering.shared.lang.parser.DateMatcher;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-
-import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
-import org.optaplanner.openshift.employeerostering.shared.lang.parser.DateMatcher;
 
 /**
  * Describes date related changes to the generated shift and when they should happen.<br>
@@ -45,6 +45,7 @@ public class ShiftConditional extends AbstractPersistable {
 
     /**
      * Getter for {@link ShiftConditional#condition}
+     *
      * @return Value of {@link ShiftConditional#condition}
      */
     public String getCondition() {
@@ -53,6 +54,7 @@ public class ShiftConditional extends AbstractPersistable {
 
     /**
      * Getter for {@link ShiftConditional#shift}
+     *
      * @return Value of {@link ShiftConditional#shift}
      */
     public ShiftInfo getShift() {
@@ -61,7 +63,7 @@ public class ShiftConditional extends AbstractPersistable {
 
     /**
      * Setter for {@link ShiftConditional#condition}
-     * 
+     *
      * @param condition Value to set {@link ShiftConditional#condition} to
      */
     public void setCondition(String condition) {
@@ -70,7 +72,7 @@ public class ShiftConditional extends AbstractPersistable {
 
     /**
      * Setter for {@link ShiftConditional#shift}
-     * 
+     *
      * @param shift Value to set {@link ShiftConditional#shift} to
      */
     public void setShift(ShiftInfo shift) {

@@ -25,8 +25,7 @@ public class MovableShiftFilter implements SelectionFilter<Roster, Shift> {
 
     @Override
     public boolean accept(ScoreDirector<Roster> scoreDirector, Shift shift) {
-        return !shift.isLockedByUser()
-                && shift.getTimeSlot().getTimeSlotState() != TimeSlotState.HISTORY;
+        return !shift.isLockedByUser() && shift.getTimeSlot().getTimeSlotState() != TimeSlotState.HISTORY;
     }
 
 }

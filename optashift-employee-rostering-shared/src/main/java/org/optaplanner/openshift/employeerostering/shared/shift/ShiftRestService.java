@@ -1,7 +1,9 @@
 package org.optaplanner.openshift.employeerostering.shared.shift;
 
-import java.util.Collection;
-import java.util.List;
+import com.github.nmorel.gwtjackson.rest.processor.GenRestBuilder;
+import org.optaplanner.openshift.employeerostering.shared.lang.tokens.ShiftInfo;
+import org.optaplanner.openshift.employeerostering.shared.lang.tokens.ShiftTemplate;
+import org.optaplanner.openshift.employeerostering.shared.shift.view.ShiftView;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -13,11 +15,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
-import com.github.nmorel.gwtjackson.rest.processor.GenRestBuilder;
-import org.optaplanner.openshift.employeerostering.shared.lang.tokens.ShiftInfo;
-import org.optaplanner.openshift.employeerostering.shared.lang.tokens.ShiftTemplate;
-import org.optaplanner.openshift.employeerostering.shared.shift.view.ShiftView;
+import java.util.Collection;
+import java.util.List;
 
 @Path("/tenant/{tenantId}/shift")
 @Produces(MediaType.APPLICATION_JSON)
@@ -54,8 +53,7 @@ public interface ShiftRestService {
 
     @PUT
     @Path("/template/create")
-    void createTemplate(@PathParam("tenantId") Integer tenantId, Collection<
-            ShiftInfo> shifts);
+    void createTemplate(@PathParam("tenantId") Integer tenantId, Collection<ShiftInfo> shifts);
 
     @GET
     @Path("/template")
@@ -64,8 +62,8 @@ public interface ShiftRestService {
     @PUT
     @Path("/add/fromTemplate")
     List<Long> addShiftsFromTemplate(@PathParam("tenantId") Integer tenantId,
-            @QueryParam("startDate") String startDateString, @QueryParam("endDate") String endDateString)
-            throws Exception;
+            @QueryParam("startDate") String startDateString,
+            @QueryParam("endDate") String endDateString) throws Exception;
 
     /**
      * @param id never null

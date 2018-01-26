@@ -1,6 +1,5 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.common;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 public class CommonUtils {

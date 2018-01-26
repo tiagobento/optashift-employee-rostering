@@ -1,13 +1,5 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.calendar.twodayview;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.view.client.HasData;
@@ -15,17 +7,23 @@ import com.google.gwt.view.client.HasRows;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.RangeChangeEvent;
+import com.google.gwt.view.client.RangeChangeEvent.Handler;
 import com.google.gwt.view.client.RowCountChangeEvent;
 import com.google.gwt.view.client.SelectionModel;
-import com.google.gwt.view.client.RangeChangeEvent.Handler;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.HasTitle;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.ShiftDrawable;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.TimeRowDrawable;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.HasTimeslot;
 
-public class TwoDayViewPager<G extends HasTitle, I extends HasTimeslot<G>, D extends TimeRowDrawable<G, I>> implements
-        HasRows, HasData<
-                Collection<D>> {
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+public class TwoDayViewPager<G extends HasTitle, I extends HasTimeslot<G>, D extends TimeRowDrawable<G, I>>
+        implements HasRows, HasData<Collection<D>> {
 
     private TwoDayViewPresenter<G, I, D> presenter;
 
@@ -42,8 +40,7 @@ public class TwoDayViewPager<G extends HasTitle, I extends HasTimeslot<G>, D ext
         page = 0;
         rangeStart = 0;
         rangeEnd = 10;
-        selectionModel = new NoSelectionModel<Collection<? extends D>>((g) -> (g.isEmpty()) ? null : g.iterator().next()
-                .getGroupId());
+        selectionModel = new NoSelectionModel<Collection<? extends D>>((g) -> (g.isEmpty()) ? null : g.iterator().next().getGroupId());
     }
 
     public void setPage(int page) {
@@ -83,8 +80,7 @@ public class TwoDayViewPager<G extends HasTitle, I extends HasTimeslot<G>, D ext
                 index++;
                 if (groupIndex < presenter.getState().getGroupList().size() && rangeStart + index > presenter.getState()
                         .getGroupEndPosMap()
-                        .getOrDefault(presenter.getState().getGroupList().get(groupIndex),
-                                rangeStart + index)) {
+                        .getOrDefault(presenter.getState().getGroupList().get(groupIndex), rangeStart + index)) {
                     groupIndex++;
                     if (groupIndex < presenter.getState().getGroupList().size()) {
                         drawnSpots.add(presenter.getState().getGroupList().get(groupIndex));
@@ -113,8 +109,7 @@ public class TwoDayViewPager<G extends HasTitle, I extends HasTimeslot<G>, D ext
         return new Registration<>(handler, rangeHandlerSet);
     }
 
-    public HandlerRegistration addRowCountChangeHandler(
-            com.google.gwt.view.client.RowCountChangeEvent.Handler handler) {
+    public HandlerRegistration addRowCountChangeHandler(com.google.gwt.view.client.RowCountChangeEvent.Handler handler) {
         rowCountHandlerSet.add(handler);
         return new Registration<>(handler, rowCountHandlerSet);
     }
@@ -162,8 +157,7 @@ public class TwoDayViewPager<G extends HasTitle, I extends HasTimeslot<G>, D ext
         presenter.draw();
     }
 
-    public HandlerRegistration addCellPreviewHandler(com.google.gwt.view.client.CellPreviewEvent.Handler<Collection<
-            D>> handler) {
+    public HandlerRegistration addCellPreviewHandler(com.google.gwt.view.client.CellPreviewEvent.Handler<Collection<D>> handler) {
         return new Registration<com.google.gwt.view.client.CellPreviewEvent.Handler<Collection<ShiftDrawable>>>();
     }
 
@@ -187,12 +181,10 @@ public class TwoDayViewPager<G extends HasTitle, I extends HasTimeslot<G>, D ext
 
     public Iterable<Collection<D>> getVisibleItems() {
         if (presenter.getState().isDirty()) {
-            cachedVisibleItemList = IntStream.range(rangeStart, Math.min(presenter.getState().getTimeSlotTable()
-                    .getNumberOfRows(), rangeEnd)).mapToObj((k) -> presenter.getState()
-                            .getTimeSlotTable()
-                            .getVisibleRow(k))
-                    .collect(
-                            Collectors.toList());
+            cachedVisibleItemList = IntStream.range(rangeStart,
+                    Math.min(presenter.getState().getTimeSlotTable().getNumberOfRows(), rangeEnd))
+                    .mapToObj((k) -> presenter.getState().getTimeSlotTable().getVisibleRow(k))
+                    .collect(Collectors.toList());
             presenter.getState().setVisibleDirty(false);
         }
         return cachedVisibleItemList;
@@ -200,10 +192,9 @@ public class TwoDayViewPager<G extends HasTitle, I extends HasTimeslot<G>, D ext
 
     public List<Collection<D>> getItemList() {
         if (presenter.getState().isAllDirty()) {
-            allItemList = IntStream.range(0, presenter.getState().getTimeSlotTable().getNumberOfRows()).mapToObj((
-                    k) -> presenter.getState()
-                            .getTimeSlotTable().getRow(k)).collect(Collectors
-                                    .toList());
+            allItemList = IntStream.range(0, presenter.getState().getTimeSlotTable().getNumberOfRows())
+                    .mapToObj((k) -> presenter.getState().getTimeSlotTable().getRow(k))
+                    .collect(Collectors.toList());
             presenter.getState().setAllDirty(false);
         }
         return allItemList;

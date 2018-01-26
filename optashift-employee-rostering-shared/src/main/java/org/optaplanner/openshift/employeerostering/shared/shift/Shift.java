@@ -16,12 +16,6 @@
 
 package org.optaplanner.openshift.employeerostering.shared.shift;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.validation.constraints.NotNull;
-
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
@@ -30,16 +24,20 @@ import org.optaplanner.openshift.employeerostering.shared.shift.view.ShiftView;
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
 import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlot;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.validation.constraints.NotNull;
+
 @Entity
-@NamedQueries({
-        @NamedQuery(name = "Shift.findAll",
-                query = "select distinct sa from Shift sa" +
-                        " left join fetch sa.spot s" +
-                        " left join fetch sa.timeSlot t" +
-                        " left join fetch sa.employee e" +
-                        " where sa.tenantId = :tenantId" +
-                        " order by t.startDateTime, s.name, e.name"),
-})
+@NamedQueries({ @NamedQuery(name = "Shift.findAll",
+                            query = "select distinct sa from Shift sa"
+                                    + " left join fetch sa.spot s"
+                                    + " left join fetch sa.timeSlot t"
+                                    + " left join fetch sa.employee e"
+                                    + " where sa.tenantId = :tenantId"
+                                    + " order by t.startDateTime, s.name, e.name"), })
 @PlanningEntity(movableEntitySelectionFilter = MovableShiftFilter.class)
 public class Shift extends AbstractPersistable {
 

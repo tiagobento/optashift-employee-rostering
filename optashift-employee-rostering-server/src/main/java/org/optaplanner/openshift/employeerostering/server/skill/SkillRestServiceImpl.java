@@ -16,15 +16,14 @@
 
 package org.optaplanner.openshift.employeerostering.server.skill;
 
-import java.util.List;
+import org.optaplanner.openshift.employeerostering.server.common.AbstractRestServiceImpl;
+import org.optaplanner.openshift.employeerostering.shared.skill.Skill;
+import org.optaplanner.openshift.employeerostering.shared.skill.SkillRestService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-
-import org.optaplanner.openshift.employeerostering.server.common.AbstractRestServiceImpl;
-import org.optaplanner.openshift.employeerostering.shared.skill.Skill;
-import org.optaplanner.openshift.employeerostering.shared.skill.SkillRestService;
+import java.util.List;
 
 public class SkillRestServiceImpl extends AbstractRestServiceImpl implements SkillRestService {
 
@@ -34,9 +33,7 @@ public class SkillRestServiceImpl extends AbstractRestServiceImpl implements Ski
     @Override
     @Transactional
     public List<Skill> getSkillList(Integer tenantId) {
-        return entityManager.createNamedQuery("Skill.findAll", Skill.class)
-                .setParameter("tenantId", tenantId)
-                .getResultList();
+        return entityManager.createNamedQuery("Skill.findAll", Skill.class).setParameter("tenantId", tenantId).getResultList();
     }
 
     @Override

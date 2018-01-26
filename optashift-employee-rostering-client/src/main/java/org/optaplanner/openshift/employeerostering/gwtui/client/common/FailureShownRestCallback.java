@@ -8,8 +8,13 @@ public abstract class FailureShownRestCallback<T> extends RestCallback<T> {
 
     @Override
     public void onError(Response response) {
-        String message = "Error calling REST method with status (" + response.getStatusCode() + ": " + response.getStatusText() + ") and text (" +
-            response.getText() + ").";
+        String message = "Error calling REST method with status ("
+                + response.getStatusCode()
+                + ": "
+                + response.getStatusText()
+                + ") and text ("
+                + response.getText()
+                + ").";
         ErrorPopup.show(message);
         throw new IllegalStateException(message);
     }

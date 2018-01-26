@@ -16,13 +16,6 @@
 
 package org.optaplanner.openshift.employeerostering.server.employee;
 
-import java.util.List;
-import java.util.Objects;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-
 import org.optaplanner.openshift.employeerostering.server.common.AbstractRestServiceImpl;
 import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
 import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeAvailability;
@@ -32,6 +25,12 @@ import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeSkill
 import org.optaplanner.openshift.employeerostering.shared.employee.view.EmployeeAvailabilityView;
 import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlot;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Objects;
+
 public class EmployeeRestServiceImpl extends AbstractRestServiceImpl implements EmployeeRestService {
 
     @PersistenceContext
@@ -40,9 +39,7 @@ public class EmployeeRestServiceImpl extends AbstractRestServiceImpl implements 
     @Override
     @Transactional
     public List<Employee> getEmployeeList(Integer tenantId) {
-        return entityManager.createNamedQuery("Employee.findAll", Employee.class)
-                .setParameter("tenantId", tenantId)
-                .getResultList();
+        return entityManager.createNamedQuery("Employee.findAll", Employee.class).setParameter("tenantId", tenantId).getResultList();
     }
 
     @Override
@@ -85,9 +82,13 @@ public class EmployeeRestServiceImpl extends AbstractRestServiceImpl implements 
         super.validateTenantIdParameter(tenantId, employee);
         for (EmployeeSkillProficiency skillProficiency : employee.getSkillProficiencySet()) {
             if (!Objects.equals(skillProficiency.getTenantId(), tenantId)) {
-                throw new IllegalStateException("The tenantId (" + tenantId
-                        + ") does not match the skillProficiency (" + skillProficiency
-                        + ")'s tenantId (" + skillProficiency.getTenantId() + ").");
+                throw new IllegalStateException("The tenantId ("
+                        + tenantId
+                        + ") does not match the skillProficiency ("
+                        + skillProficiency
+                        + ")'s tenantId ("
+                        + skillProficiency.getTenantId()
+                        + ").");
             }
         }
     }
@@ -191,12 +192,11 @@ public class EmployeeRestServiceImpl extends AbstractRestServiceImpl implements 
             EmployeeGroup out = EmployeeGroup.getAllGroup(tenantId);
             out.setEmployees(getEmployeeList(tenantId));
             return out;
-        }
-        else {
+        } else {
             return entityManager.createNamedQuery("EmployeeGroup.findByName", EmployeeGroup.class)
-                .setParameter("tenantId", tenantId)
-                .setParameter("name", name)
-                .getSingleResult();
+                    .setParameter("tenantId", tenantId)
+                    .setParameter("name", name)
+                    .getSingleResult();
         }
     }
 

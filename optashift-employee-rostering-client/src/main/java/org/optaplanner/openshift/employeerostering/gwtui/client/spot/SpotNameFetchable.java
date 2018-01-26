@@ -1,15 +1,14 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.spot;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.inject.Provider;
-
 import org.optaplanner.openshift.employeerostering.gwtui.client.common.FailureShownRestCallback;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.Fetchable;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.Updatable;
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
 import org.optaplanner.openshift.employeerostering.shared.spot.SpotRestServiceBuilder;
+
+import javax.inject.Provider;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SpotNameFetchable implements Fetchable<List<SpotId>> {
 

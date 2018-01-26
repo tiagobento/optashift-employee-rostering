@@ -53,7 +53,7 @@ import java.util.Comparator;
  * calendar system, is pluggable. The date is defined in terms of fields expressed by {@link DateTimeField},
  * where most common implementations are defined in {@link ChronoField}. The chronology defines how the
  * calendar system operates and the meaning of the standard fields.
- * 
+ * <p>
  * <h4>When to use this interface</h4>
  * The design of the API encourages the use of {@code LocalDate} rather than this interface, even in the case
  * where the application needs to deal with multiple calendar systems. The rationale for this is explored in
@@ -70,7 +70,7 @@ import java.util.Comparator;
  * initially seem like the sensible way to globalize an application, however it is usually the wrong approach.
  * As such, it should be considered an application-wide architectural decision to choose to use this interface
  * as opposed to {@code LocalDate}.
- * 
+ * <p>
  * <h4>Architectural issues to consider</h4> These are some of the points that must be considered before using
  * this interface throughout an application.
  * <p>
@@ -107,7 +107,7 @@ import java.util.Comparator;
  * <p>
  * 6) Most of the time, passing a {@code ChronoLocalDate} throughout an application is unnecessary, as
  * discussed in the last section below.
- * 
+ * <p>
  * <h4>False assumptions causing bugs in multi-calendar system code</h4>
  * As indicated above, there are many issues to consider when try to use and manipulate a date in an arbitrary
  * calendar system. These are some of the key issues.
@@ -142,7 +142,7 @@ import java.util.Comparator;
  * unknown at development time. This is why it is essential that code using this interface is subjected to
  * additional code reviews. It is also why an architectural decision to avoid this interface type is usually
  * the correct one.
- * 
+ * <p>
  * <h4>Using LocalDate instead</h4> The primary alternative to using this interface throughout your
  * application is as follows.
  * <p>
@@ -183,239 +183,246 @@ import java.util.Comparator;
  * Developers writing low-level frameworks or libraries should also avoid this interface. Instead, one of the
  * two general purpose access interfaces should be used. Use {@link DateTimeAccessor} if read-only access is
  * required, or use {@link DateTime} if read-write access is required.
- * 
+ * <p>
  * <h4>Implementation notes</h4>
  * This interface must be implemented with care to ensure other classes operate correctly. All implementations
  * that can be instantiated must be final, immutable and thread-safe. Subclasses should be Serializable
  * wherever possible.
  * <p>
  * Additional calendar systems may be added to the system. See {@link Chrono} for more details.
- * 
+ *
  * @param <C> the chronology of this date
  */
 public interface ChronoLocalDate<C extends Chrono<C>> extends DateTime, WithAdjuster, Comparable<ChronoLocalDate<?>> {
 
-  /**
-   * Comparator for two {@code ChronoLocalDate}s ignoring the chronology.
-   * <p>
-   * This comparator differs from the comparison in {@link #compareTo} in that it only compares the underlying
-   * date and not the chronology. This allows dates in different calendar systems to be compared based on the
-   * time-line position. This is equivalent to using
-   * {@code Jdk7Methods.Long_compare(date1.toEpochDay(),  date2.toEpochDay())}.
-   * 
-   * @see #isAfter
-   * @see #isBefore
-   * @see #isEqual
-   */
-  public static final Comparator<ChronoLocalDate<?>> DATE_COMPARATOR = new Comparator<ChronoLocalDate<?>>() {
+    /**
+     * Comparator for two {@code ChronoLocalDate}s ignoring the chronology.
+     * <p>
+     * This comparator differs from the comparison in {@link #compareTo} in that it only compares the underlying
+     * date and not the chronology. This allows dates in different calendar systems to be compared based on the
+     * time-line position. This is equivalent to using
+     * {@code Jdk7Methods.Long_compare(date1.toEpochDay(),  date2.toEpochDay())}.
+     *
+     * @see #isAfter
+     * @see #isBefore
+     * @see #isEqual
+     */
+    public static final Comparator<ChronoLocalDate<?>> DATE_COMPARATOR = new Comparator<ChronoLocalDate<?>>() {
+
+        @Override
+        public int compare(ChronoLocalDate<?> date1, ChronoLocalDate<?> date2) {
+
+            return Jdk7Methods.Long_compare(date1.toEpochDay(), date2.toEpochDay());
+        }
+    };
+
+    /**
+     * Gets the chronology of this date.
+     * <p>
+     * The {@code Chrono} represents the calendar system in use. The era and other fields in {@link ChronoField}
+     * are defined by the chronology.
+     *
+     * @return the chronology, not null
+     */
+    C getChrono();
+
+    /**
+     * Gets the era, as defined by the chronology.
+     * <p>
+     * The era is, conceptually, the largest division of the time-line. Most calendar systems have a single
+     * epoch dividing the time-line into two eras. However, some have multiple eras, such as one for the reign
+     * of each leader. The exact meaning is determined by the {@code Chrono}.
+     * <p>
+     * All correctly implemented {@code Era} classes are singletons, thus it is valid code to write
+     * {@code date.getEra() == SomeChrono.ERA_NAME)}.
+     *
+     * @return the chronology specific era constant applicable at this date, not null
+     */
+    Era<C> getEra();
+
+    // -----------------------------------------------------------------------
+
+    /**
+     * Checks if the year is a leap year, as defined by the calendar system.
+     * <p>
+     * A leap-year is a year of a longer length than normal. The exact meaning is determined by the chronology
+     * with the constraint that a leap-year must imply a year-length longer than a non leap-year.
+     * <p>
+     * The default implementation uses {@link Chrono#isLeapYear(long)}.
+     *
+     * @return true if this date is in a leap year, false otherwise
+     */
+    boolean isLeapYear();
+
+    /**
+     * Returns the length of the month represented by this date, as defined by the calendar system.
+     * <p>
+     * This returns the length of the month in days.
+     *
+     * @return the length of the month in days
+     */
+    int lengthOfMonth();
+
+    /**
+     * Returns the length of the year represented by this date, as defined by the calendar system.
+     * <p>
+     * This returns the length of the year in days.
+     * <p>
+     * The default implementation uses {@link #isLeapYear()} and returns 365 or 366.
+     *
+     * @return the length of the year in days
+     */
+    int lengthOfYear();
+
+    // -------------------------------------------------------------------------
+    // override for covariant return type
+    @Override
+    ChronoLocalDate<C> with(WithAdjuster adjuster);
 
     @Override
-    public int compare(ChronoLocalDate<?> date1, ChronoLocalDate<?> date2) {
+    ChronoLocalDate<C> with(DateTimeField field, long newValue);
 
-      return Jdk7Methods.Long_compare(date1.toEpochDay(), date2.toEpochDay());
-    }
-  };
+    @Override
+    ChronoLocalDate<C> plus(PlusAdjuster adjuster);
 
-  /**
-   * Gets the chronology of this date.
-   * <p>
-   * The {@code Chrono} represents the calendar system in use. The era and other fields in {@link ChronoField}
-   * are defined by the chronology.
-   * 
-   * @return the chronology, not null
-   */
-  C getChrono();
+    @Override
+    ChronoLocalDate<C> plus(long amountToAdd, PeriodUnit unit);
 
-  /**
-   * Gets the era, as defined by the chronology.
-   * <p>
-   * The era is, conceptually, the largest division of the time-line. Most calendar systems have a single
-   * epoch dividing the time-line into two eras. However, some have multiple eras, such as one for the reign
-   * of each leader. The exact meaning is determined by the {@code Chrono}.
-   * <p>
-   * All correctly implemented {@code Era} classes are singletons, thus it is valid code to write
-   * {@code date.getEra() == SomeChrono.ERA_NAME)}.
-   * 
-   * @return the chronology specific era constant applicable at this date, not null
-   */
-  Era<C> getEra();
+    @Override
+    ChronoLocalDate<C> minus(MinusAdjuster adjuster);
 
-  // -----------------------------------------------------------------------
-  /**
-   * Checks if the year is a leap year, as defined by the calendar system.
-   * <p>
-   * A leap-year is a year of a longer length than normal. The exact meaning is determined by the chronology
-   * with the constraint that a leap-year must imply a year-length longer than a non leap-year.
-   * <p>
-   * The default implementation uses {@link Chrono#isLeapYear(long)}.
-   * 
-   * @return true if this date is in a leap year, false otherwise
-   */
-  boolean isLeapYear();
+    @Override
+    ChronoLocalDate<C> minus(long amountToSubtract, PeriodUnit unit);
 
-  /**
-   * Returns the length of the month represented by this date, as defined by the calendar system.
-   * <p>
-   * This returns the length of the month in days.
-   * 
-   * @return the length of the month in days
-   */
-  int lengthOfMonth();
+    // -----------------------------------------------------------------------
 
-  /**
-   * Returns the length of the year represented by this date, as defined by the calendar system.
-   * <p>
-   * This returns the length of the year in days.
-   * <p>
-   * The default implementation uses {@link #isLeapYear()} and returns 365 or 366.
-   * 
-   * @return the length of the year in days
-   */
-  int lengthOfYear();
+    /**
+     * Returns a date-time formed from this date at the specified time.
+     * <p>
+     * This merges the two objects - {@code this} and the specified time - to form an instance of
+     * {@code ChronoLocalDateTime}.
+     * <p>
+     * This instance is immutable and unaffected by this method call.
+     *
+     * @param localTime the local time to use, not null
+     * @return the local date-time formed from this date and the specified time, not null
+     */
+    ChronoLocalDateTime<C> atTime(LocalTime localTime);
 
-  // -------------------------------------------------------------------------
-  // override for covariant return type
-  @Override
-  ChronoLocalDate<C> with(WithAdjuster adjuster);
+    // -----------------------------------------------------------------------
 
-  @Override
-  ChronoLocalDate<C> with(DateTimeField field, long newValue);
+    /**
+     * Converts this date to the Epoch Day.
+     * <p>
+     * The {@link ChronoField#EPOCH_DAY Epoch Day count} is a simple incrementing count of days where day 0 is
+     * 1970-01-01 (ISO). This definition is the same for all chronologies, enabling conversion.
+     *
+     * @return the Epoch Day equivalent to this date
+     */
+    long toEpochDay();
 
-  @Override
-  ChronoLocalDate<C> plus(PlusAdjuster adjuster);
+    // -----------------------------------------------------------------------
 
-  @Override
-  ChronoLocalDate<C> plus(long amountToAdd, PeriodUnit unit);
+    /**
+     * Compares this date to another date, including the chronology.
+     * <p>
+     * The comparison is based first on the underlying time-line date, then on the chronology. It is
+     * "consistent with equals", as defined by {@link Comparable}.
+     * <p>
+     * For example, the following is the comparator order:
+     * <ol>
+     * <li>{@code 2012-12-03 (ISO)}</li>
+     * <li>{@code 2012-12-04 (ISO)}</li>
+     * <li>{@code 2555-12-04 (ThaiBuddhist)}</li>
+     * <li>{@code 2012-12-05 (ISO)}</li>
+     * </ol>
+     * Values #2 and #3 represent the same date on the time-line. When two values represent the same date, the
+     * chronology ID is compared to distinguish them. This step is needed to make the ordering
+     * "consistent with equals".
+     * <p>
+     * If all the date objects being compared are in the same chronology, then the additional chronology stage
+     * is not required and only the local date is used. To compare the dates of two {@code DateTimeAccessor}
+     * instances, including dates in two different chronologies, use {@link ChronoField#EPOCH_DAY} as a
+     * comparator.
+     *
+     * @param other the other date to compare to, not null
+     * @return the comparator value, negative if less, positive if greater
+     */
+    @Override
+    int compareTo(ChronoLocalDate<?> other);
 
-  @Override
-  ChronoLocalDate<C> minus(MinusAdjuster adjuster);
+    // -----------------------------------------------------------------------
 
-  @Override
-  ChronoLocalDate<C> minus(long amountToSubtract, PeriodUnit unit);
+    /**
+     * Checks if this date is after the specified date ignoring the chronology.
+     * <p>
+     * This method differs from the comparison in {@link #compareTo} in that it only compares the underlying
+     * date and not the chronology. This allows dates in different calendar systems to be compared based on the
+     * time-line position. This is equivalent to using {@code date1.toEpochDay() &gt; date2.toEpochDay()}.
+     *
+     * @param other the other date to compare to, not null
+     * @return true if this is after the specified date
+     */
+    boolean isAfter(ChronoLocalDate<?> other);
 
-  // -----------------------------------------------------------------------
-  /**
-   * Returns a date-time formed from this date at the specified time.
-   * <p>
-   * This merges the two objects - {@code this} and the specified time - to form an instance of
-   * {@code ChronoLocalDateTime}.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   * 
-   * @param localTime the local time to use, not null
-   * @return the local date-time formed from this date and the specified time, not null
-   */
-  ChronoLocalDateTime<C> atTime(LocalTime localTime);
+    /**
+     * Checks if this date is before the specified date ignoring the chronology.
+     * <p>
+     * This method differs from the comparison in {@link #compareTo} in that it only compares the underlying
+     * date and not the chronology. This allows dates in different calendar systems to be compared based on the
+     * time-line position. This is equivalent to using {@code date1.toEpochDay() &lt; date2.toEpochDay()}.
+     *
+     * @param other the other date to compare to, not null
+     * @return true if this is before the specified date
+     */
+    boolean isBefore(ChronoLocalDate<?> other);
 
-  // -----------------------------------------------------------------------
-  /**
-   * Converts this date to the Epoch Day.
-   * <p>
-   * The {@link ChronoField#EPOCH_DAY Epoch Day count} is a simple incrementing count of days where day 0 is
-   * 1970-01-01 (ISO). This definition is the same for all chronologies, enabling conversion.
-   * 
-   * @return the Epoch Day equivalent to this date
-   */
-  long toEpochDay();
+    /**
+     * Checks if this date is equal to the specified date ignoring the chronology.
+     * <p>
+     * This method differs from the comparison in {@link #compareTo} in that it only compares the underlying
+     * date and not the chronology. This allows dates in different calendar systems to be compared based on the
+     * time-line position. This is equivalent to using {@code date1.toEpochDay() == date2.toEpochDay()}.
+     *
+     * @param other the other date to compare to, not null
+     * @return true if the underlying date is equal to the specified date
+     */
+    boolean isEqual(ChronoLocalDate<?> other);
 
-  // -----------------------------------------------------------------------
-  /**
-   * Compares this date to another date, including the chronology.
-   * <p>
-   * The comparison is based first on the underlying time-line date, then on the chronology. It is
-   * "consistent with equals", as defined by {@link Comparable}.
-   * <p>
-   * For example, the following is the comparator order:
-   * <ol>
-   * <li>{@code 2012-12-03 (ISO)}</li>
-   * <li>{@code 2012-12-04 (ISO)}</li>
-   * <li>{@code 2555-12-04 (ThaiBuddhist)}</li>
-   * <li>{@code 2012-12-05 (ISO)}</li>
-   * </ol>
-   * Values #2 and #3 represent the same date on the time-line. When two values represent the same date, the
-   * chronology ID is compared to distinguish them. This step is needed to make the ordering
-   * "consistent with equals".
-   * <p>
-   * If all the date objects being compared are in the same chronology, then the additional chronology stage
-   * is not required and only the local date is used. To compare the dates of two {@code DateTimeAccessor}
-   * instances, including dates in two different chronologies, use {@link ChronoField#EPOCH_DAY} as a
-   * comparator.
-   * 
-   * @param other the other date to compare to, not null
-   * @return the comparator value, negative if less, positive if greater
-   */
-  @Override
-  int compareTo(ChronoLocalDate<?> other);
+    // -----------------------------------------------------------------------
 
-  // -----------------------------------------------------------------------
-  /**
-   * Checks if this date is after the specified date ignoring the chronology.
-   * <p>
-   * This method differs from the comparison in {@link #compareTo} in that it only compares the underlying
-   * date and not the chronology. This allows dates in different calendar systems to be compared based on the
-   * time-line position. This is equivalent to using {@code date1.toEpochDay() &gt; date2.toEpochDay()}.
-   * 
-   * @param other the other date to compare to, not null
-   * @return true if this is after the specified date
-   */
-  boolean isAfter(ChronoLocalDate<?> other);
+    /**
+     * Checks if this date is equal to another date, including the chronology.
+     * <p>
+     * Compares this date with another ensuring that the date and chronology are the same.
+     * <p>
+     * To compare the dates of two {@code DateTimeAccessor} instances, including dates in two different
+     * chronologies, use {@link ChronoField#EPOCH_DAY} as a comparator.
+     *
+     * @param obj the object to check, null returns false
+     * @return true if this is equal to the other date
+     */
+    @Override
+    boolean equals(Object obj);
 
-  /**
-   * Checks if this date is before the specified date ignoring the chronology.
-   * <p>
-   * This method differs from the comparison in {@link #compareTo} in that it only compares the underlying
-   * date and not the chronology. This allows dates in different calendar systems to be compared based on the
-   * time-line position. This is equivalent to using {@code date1.toEpochDay() &lt; date2.toEpochDay()}.
-   * 
-   * @param other the other date to compare to, not null
-   * @return true if this is before the specified date
-   */
-  boolean isBefore(ChronoLocalDate<?> other);
+    /**
+     * A hash code for this date.
+     *
+     * @return a suitable hash code
+     */
+    @Override
+    int hashCode();
 
-  /**
-   * Checks if this date is equal to the specified date ignoring the chronology.
-   * <p>
-   * This method differs from the comparison in {@link #compareTo} in that it only compares the underlying
-   * date and not the chronology. This allows dates in different calendar systems to be compared based on the
-   * time-line position. This is equivalent to using {@code date1.toEpochDay() == date2.toEpochDay()}.
-   * 
-   * @param other the other date to compare to, not null
-   * @return true if the underlying date is equal to the specified date
-   */
-  boolean isEqual(ChronoLocalDate<?> other);
+    // -----------------------------------------------------------------------
 
-  // -----------------------------------------------------------------------
-  /**
-   * Checks if this date is equal to another date, including the chronology.
-   * <p>
-   * Compares this date with another ensuring that the date and chronology are the same.
-   * <p>
-   * To compare the dates of two {@code DateTimeAccessor} instances, including dates in two different
-   * chronologies, use {@link ChronoField#EPOCH_DAY} as a comparator.
-   * 
-   * @param obj the object to check, null returns false
-   * @return true if this is equal to the other date
-   */
-  @Override
-  boolean equals(Object obj);
-
-  /**
-   * A hash code for this date.
-   * 
-   * @return a suitable hash code
-   */
-  @Override
-  int hashCode();
-
-  // -----------------------------------------------------------------------
-  /**
-   * Outputs this date as a {@code String}.
-   * <p>
-   * The output will include the full local date and the chronology ID.
-   * 
-   * @return the formatted date, not null
-   */
-  @Override
-  String toString();
+    /**
+     * Outputs this date as a {@code String}.
+     * <p>
+     * The output will include the full local date and the chronology ID.
+     *
+     * @return the formatted date, not null
+     */
+    @Override
+    String toString();
 
 }

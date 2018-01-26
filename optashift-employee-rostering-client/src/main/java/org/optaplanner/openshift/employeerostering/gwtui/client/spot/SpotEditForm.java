@@ -1,13 +1,5 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.spot;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -27,6 +19,13 @@ import org.optaplanner.openshift.employeerostering.gwtui.client.popups.FormPopup
 import org.optaplanner.openshift.employeerostering.shared.skill.Skill;
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
 import org.optaplanner.openshift.employeerostering.shared.spot.SpotRestServiceBuilder;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Templated
 public class SpotEditForm implements IsElement {
@@ -53,7 +52,8 @@ public class SpotEditForm implements IsElement {
 
     @Inject
     @DataField
-    private @Named(value = "h3") HeadingElement title;
+    private @Named(value = "h3")
+    HeadingElement title;
 
     @Inject
     private TranslationService CONSTANTS;
@@ -64,8 +64,7 @@ public class SpotEditForm implements IsElement {
 
     private FormPopup popup;
 
-    public static SpotEditForm create(SyncBeanManager beanManager, SpotListPanel spotPanel, Spot spotData, List<
-            Skill> skillData) {
+    public static SpotEditForm create(SyncBeanManager beanManager, SpotListPanel spotPanel, Spot spotData, List<Skill> skillData) {
         panel = spotPanel;
         spot = spotData;
         skillList = skillData;
@@ -88,8 +87,7 @@ public class SpotEditForm implements IsElement {
         requiredSkills.setItemText(Skill::getName);
         requiredSkills.reconfigure();
         requiredSkills.add(spot.getRequiredSkillSet().stream().collect(Collectors.toList()));
-        title.setInnerSafeHtml(new SafeHtmlBuilder().appendEscaped(spot.getName())
-                .toSafeHtml());
+        title.setInnerSafeHtml(new SafeHtmlBuilder().appendEscaped(spot.getName()).toSafeHtml());
         popup = FormPopup.getFormPopup(this);
         popup.center();
     }

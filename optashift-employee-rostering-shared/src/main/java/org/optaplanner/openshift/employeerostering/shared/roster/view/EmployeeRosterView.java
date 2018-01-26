@@ -16,22 +16,13 @@
 
 package org.optaplanner.openshift.employeerostering.shared.roster.view;
 
-import java.io.Serializable;
+import org.optaplanner.openshift.employeerostering.shared.employee.view.EmployeeAvailabilityView;
+import org.optaplanner.openshift.employeerostering.shared.shift.view.ShiftView;
+
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
-import org.optaplanner.openshift.employeerostering.shared.employee.view.EmployeeAvailabilityView;
-import org.optaplanner.openshift.employeerostering.shared.shift.view.ShiftView;
-import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
-import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlot;
 
 public class EmployeeRosterView extends AbstractRosterView {
 

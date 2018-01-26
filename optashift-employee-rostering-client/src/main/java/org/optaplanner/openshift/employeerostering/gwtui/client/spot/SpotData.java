@@ -1,14 +1,11 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.spot;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.HasTimeslot;
-import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
 import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
 import org.optaplanner.openshift.employeerostering.shared.shift.Shift;
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
+
+import java.time.LocalDateTime;
 
 public class SpotData implements HasTimeslot<SpotId> {
 

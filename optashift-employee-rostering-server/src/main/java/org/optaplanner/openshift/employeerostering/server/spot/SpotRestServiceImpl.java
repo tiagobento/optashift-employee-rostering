@@ -16,16 +16,15 @@
 
 package org.optaplanner.openshift.employeerostering.server.spot;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-
 import org.optaplanner.openshift.employeerostering.server.common.AbstractRestServiceImpl;
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
 import org.optaplanner.openshift.employeerostering.shared.spot.SpotGroup;
 import org.optaplanner.openshift.employeerostering.shared.spot.SpotRestService;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.util.List;
 
 public class SpotRestServiceImpl extends AbstractRestServiceImpl implements SpotRestService {
 
@@ -35,9 +34,7 @@ public class SpotRestServiceImpl extends AbstractRestServiceImpl implements Spot
     @Override
     @Transactional
     public List<Spot> getSpotList(Integer tenantId) {
-        return entityManager.createNamedQuery("Spot.findAll", Spot.class)
-                .setParameter("tenantId", tenantId)
-                .getResultList();
+        return entityManager.createNamedQuery("Spot.findAll", Spot.class).setParameter("tenantId", tenantId).getResultList();
     }
 
     @Override
@@ -78,9 +75,7 @@ public class SpotRestServiceImpl extends AbstractRestServiceImpl implements Spot
 
     @Override
     public List<SpotGroup> getSpotGroups(Integer tenantId) {
-        return entityManager.createNamedQuery("SpotGroup.findAll", SpotGroup.class)
-                .setParameter("tenantId", tenantId)
-                .getResultList();
+        return entityManager.createNamedQuery("SpotGroup.findAll", SpotGroup.class).setParameter("tenantId", tenantId).getResultList();
     }
 
     @Override

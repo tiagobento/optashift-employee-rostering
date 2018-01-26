@@ -16,12 +16,12 @@
 
 package org.optaplanner.openshift.employeerostering.shared.shift.view;
 
-import javax.validation.constraints.NotNull;
-
 import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
 import org.optaplanner.openshift.employeerostering.shared.shift.Shift;
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
 import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlot;
+
+import javax.validation.constraints.NotNull;
 
 public class ShiftView extends AbstractPersistable {
 

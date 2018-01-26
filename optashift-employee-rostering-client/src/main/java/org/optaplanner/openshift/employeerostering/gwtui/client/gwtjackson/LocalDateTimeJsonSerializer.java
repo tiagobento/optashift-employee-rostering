@@ -1,11 +1,11 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.gwtjackson;
 
-import java.time.LocalDateTime;
-
 import com.github.nmorel.gwtjackson.client.JsonSerializationContext;
 import com.github.nmorel.gwtjackson.client.JsonSerializer;
 import com.github.nmorel.gwtjackson.client.JsonSerializerParameters;
 import com.github.nmorel.gwtjackson.client.stream.JsonWriter;
+
+import java.time.LocalDateTime;
 
 public class LocalDateTimeJsonSerializer extends JsonSerializer<LocalDateTime> {
 

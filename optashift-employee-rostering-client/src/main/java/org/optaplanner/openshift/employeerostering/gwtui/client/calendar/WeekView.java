@@ -1,19 +1,11 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.calendar;
 
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.format.TextStyle;
-import java.util.Collection;
-import java.util.List;
-
-import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.i18n.client.LocaleInfo;
 import elemental2.dom.CanvasRenderingContext2D;
-import elemental2.dom.Event;
-import elemental2.dom.MouseEvent;
 import org.optaplanner.openshift.employeerostering.gwtui.client.canvas.CanvasUtils;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.HasTimeslot;
-import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
+
+import java.util.Collection;
 
 //TODO: See if you can replace me with a Google Calendar widget
 public abstract class WeekView<G extends HasTitle, I extends HasTimeslot<G>> implements CalendarPresenter<G, I> {
@@ -68,8 +60,7 @@ public abstract class WeekView<G extends HasTitle, I extends HasTimeslot<G>> imp
         int fontSize = Integer.MAX_VALUE;
         CanvasUtils.setFillColor(g, LINE_COLOR);
         for (int i = 0; i < 7; i++) {
-            int fittedFontSize = CanvasUtils.fitTextToBox(g, WEEKDAYS[i], dayWidth - WIDTH_PADDING, HEADER_HEIGHT
-                    - HEIGHT_PADDING);
+            int fittedFontSize = CanvasUtils.fitTextToBox(g, WEEKDAYS[i], dayWidth - WIDTH_PADDING, HEADER_HEIGHT - HEIGHT_PADDING);
             if (fittedFontSize < fontSize) {
                 fontSize = fittedFontSize;
             }
@@ -81,8 +72,7 @@ public abstract class WeekView<G extends HasTitle, I extends HasTimeslot<G>> imp
             double textWidth = g.measureText(WEEKDAYS[i]).width;
             double textHeight = CanvasUtils.getTextHeight(g, fontSize);
 
-            g.fillText(WEEKDAYS[i], dayWidth * (i + 1) + (dayWidth - textWidth) / 2, HEADER_HEIGHT - (HEADER_HEIGHT
-                    - textHeight) / 2);
+            g.fillText(WEEKDAYS[i], dayWidth * (i + 1) + (dayWidth - textWidth) / 2, HEADER_HEIGHT - (HEADER_HEIGHT - textHeight) / 2);
         }
 
         fontSize = CanvasUtils.fitTextToBox(g, "0:00", dayWidth, hourHeight);

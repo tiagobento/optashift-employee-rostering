@@ -30,8 +30,7 @@ public final class Interval {
     public boolean equals(Object o) {
         if (o instanceof Interval) {
             Interval other = (Interval) o;
-            return this.getStartPoint().equals(other.getStartPoint()) &&
-                    this.getEndPoint().equals(other.getEndPoint());
+            return this.getStartPoint().equals(other.getStartPoint()) && this.getEndPoint().equals(other.getEndPoint());
         }
         return false;
     }

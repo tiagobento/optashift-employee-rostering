@@ -68,7 +68,7 @@ import java.util.TimeZone;
  * <p>
  * The code supports loading a {@code ZoneId} on a JVM which does not have available rules for that ID. This
  * allows the date-time object, such as {@link ZonedDateTime}, to still be queried.
- * 
+ * <p>
  * <h4>Time-zone IDs</h4> The ID is unique within the system. The formats for offset and region IDs differ.
  * <p>
  * An ID is parsed as an offset ID if it starts with 'UTC', 'GMT', '+' or '-', or is a single letter. For
@@ -92,342 +92,352 @@ import java.util.TimeZone;
  * airport code. However, the airport of Utrecht has the code 'UTC', which is obviously a conflict. The
  * recommended format for region IDs from groups other than TZDB is 'group~region'. Thus if IATA data were
  * defined, Utrecht airport would be 'IATA~UTC'.
- * 
+ * <p>
  * <h4>Implementation notes</h4> This class is immutable and thread-safe.
  */
 public abstract class ZoneId {
 
-  /**
-   * A map of zone overrides to enable the older US time-zone names to be used.
-   * <p>
-   * This maps as follows:
-   * <p>
-   * <ul>
-   * <li>EST - America/Indianapolis</li>
-   * <li>MST - America/Phoenix</li>
-   * <li>HST - Pacific/Honolulu</li>
-   * <li>ACT - Australia/Darwin</li>
-   * <li>AET - Australia/Sydney</li>
-   * <li>AGT - America/Argentina/Buenos_Aires</li>
-   * <li>ART - Africa/Cairo</li>
-   * <li>AST - America/Anchorage</li>
-   * <li>BET - America/Sao_Paulo</li>
-   * <li>BST - Asia/Dhaka</li>
-   * <li>CAT - Africa/Harare</li>
-   * <li>CNT - America/St_Johns</li>
-   * <li>CST - America/Chicago</li>
-   * <li>CTT - Asia/Shanghai</li>
-   * <li>EAT - Africa/Addis_Ababa</li>
-   * <li>ECT - Europe/Paris</li>
-   * <li>IET - America/Indiana/Indianapolis</li>
-   * <li>IST - Asia/Kolkata</li>
-   * <li>JST - Asia/Tokyo</li>
-   * <li>MIT - Pacific/Apia</li>
-   * <li>NET - Asia/Yerevan</li>
-   * <li>NST - Pacific/Auckland</li>
-   * <li>PLT - Asia/Karachi</li>
-   * <li>PNT - America/Phoenix</li>
-   * <li>PRT - America/Puerto_Rico</li>
-   * <li>PST - America/Los_Angeles</li>
-   * <li>SST - Pacific/Guadalcanal</li>
-   * <li>VST - Asia/Ho_Chi_Minh</li>
-   * </ul>
-   * <p>
-   * The map is unmodifiable.
-   */
-  public static final Map<String, String> OLD_IDS_PRE_2005;
+    /**
+     * A map of zone overrides to enable the older US time-zone names to be used.
+     * <p>
+     * This maps as follows:
+     * <p>
+     * <ul>
+     * <li>EST - America/Indianapolis</li>
+     * <li>MST - America/Phoenix</li>
+     * <li>HST - Pacific/Honolulu</li>
+     * <li>ACT - Australia/Darwin</li>
+     * <li>AET - Australia/Sydney</li>
+     * <li>AGT - America/Argentina/Buenos_Aires</li>
+     * <li>ART - Africa/Cairo</li>
+     * <li>AST - America/Anchorage</li>
+     * <li>BET - America/Sao_Paulo</li>
+     * <li>BST - Asia/Dhaka</li>
+     * <li>CAT - Africa/Harare</li>
+     * <li>CNT - America/St_Johns</li>
+     * <li>CST - America/Chicago</li>
+     * <li>CTT - Asia/Shanghai</li>
+     * <li>EAT - Africa/Addis_Ababa</li>
+     * <li>ECT - Europe/Paris</li>
+     * <li>IET - America/Indiana/Indianapolis</li>
+     * <li>IST - Asia/Kolkata</li>
+     * <li>JST - Asia/Tokyo</li>
+     * <li>MIT - Pacific/Apia</li>
+     * <li>NET - Asia/Yerevan</li>
+     * <li>NST - Pacific/Auckland</li>
+     * <li>PLT - Asia/Karachi</li>
+     * <li>PNT - America/Phoenix</li>
+     * <li>PRT - America/Puerto_Rico</li>
+     * <li>PST - America/Los_Angeles</li>
+     * <li>SST - Pacific/Guadalcanal</li>
+     * <li>VST - Asia/Ho_Chi_Minh</li>
+     * </ul>
+     * <p>
+     * The map is unmodifiable.
+     */
+    public static final Map<String, String> OLD_IDS_PRE_2005;
 
-  /**
-   * A map of zone overrides to enable the older US time-zone names to be used.
-   * <p>
-   * This maps as follows:
-   * <p>
-   * <ul>
-   * <li>EST - -05:00</li>
-   * <li>HST - -10:00</li>
-   * <li>MST - -07:00</li>
-   * <li>ACT - Australia/Darwin</li>
-   * <li>AET - Australia/Sydney</li>
-   * <li>AGT - America/Argentina/Buenos_Aires</li>
-   * <li>ART - Africa/Cairo</li>
-   * <li>AST - America/Anchorage</li>
-   * <li>BET - America/Sao_Paulo</li>
-   * <li>BST - Asia/Dhaka</li>
-   * <li>CAT - Africa/Harare</li>
-   * <li>CNT - America/St_Johns</li>
-   * <li>CST - America/Chicago</li>
-   * <li>CTT - Asia/Shanghai</li>
-   * <li>EAT - Africa/Addis_Ababa</li>
-   * <li>ECT - Europe/Paris</li>
-   * <li>IET - America/Indiana/Indianapolis</li>
-   * <li>IST - Asia/Kolkata</li>
-   * <li>JST - Asia/Tokyo</li>
-   * <li>MIT - Pacific/Apia</li>
-   * <li>NET - Asia/Yerevan</li>
-   * <li>NST - Pacific/Auckland</li>
-   * <li>PLT - Asia/Karachi</li>
-   * <li>PNT - America/Phoenix</li>
-   * <li>PRT - America/Puerto_Rico</li>
-   * <li>PST - America/Los_Angeles</li>
-   * <li>SST - Pacific/Guadalcanal</li>
-   * <li>VST - Asia/Ho_Chi_Minh</li>
-   * </ul>
-   * <p>
-   * The map is unmodifiable.
-   */
-  public static final Map<String, String> OLD_IDS_POST_2005;
-  static {
-    Map<String, String> base = new HashMap<String, String>();
-    base.put("ACT", "Australia/Darwin");
-    base.put("AET", "Australia/Sydney");
-    base.put("AGT", "America/Argentina/Buenos_Aires");
-    base.put("ART", "Africa/Cairo");
-    base.put("AST", "America/Anchorage");
-    base.put("BET", "America/Sao_Paulo");
-    base.put("BST", "Asia/Dhaka");
-    base.put("CAT", "Africa/Harare");
-    base.put("CNT", "America/St_Johns");
-    base.put("CST", "America/Chicago");
-    base.put("CTT", "Asia/Shanghai");
-    base.put("EAT", "Africa/Addis_Ababa");
-    base.put("ECT", "Europe/Paris");
-    base.put("IET", "America/Indiana/Indianapolis");
-    base.put("IST", "Asia/Kolkata");
-    base.put("JST", "Asia/Tokyo");
-    base.put("MIT", "Pacific/Apia");
-    base.put("NET", "Asia/Yerevan");
-    base.put("NST", "Pacific/Auckland");
-    base.put("PLT", "Asia/Karachi");
-    base.put("PNT", "America/Phoenix");
-    base.put("PRT", "America/Puerto_Rico");
-    base.put("PST", "America/Los_Angeles");
-    base.put("SST", "Pacific/Guadalcanal");
-    base.put("VST", "Asia/Ho_Chi_Minh");
-    Map<String, String> pre = new HashMap<String, String>(base);
-    pre.put("EST", "America/Indianapolis");
-    pre.put("MST", "America/Phoenix");
-    pre.put("HST", "Pacific/Honolulu");
-    OLD_IDS_PRE_2005 = Collections.unmodifiableMap(pre);
-    Map<String, String> post = new HashMap<String, String>(base);
-    post.put("EST", "-05:00");
-    post.put("MST", "-07:00");
-    post.put("HST", "-10:00");
-    OLD_IDS_POST_2005 = Collections.unmodifiableMap(post);
-  }
+    /**
+     * A map of zone overrides to enable the older US time-zone names to be used.
+     * <p>
+     * This maps as follows:
+     * <p>
+     * <ul>
+     * <li>EST - -05:00</li>
+     * <li>HST - -10:00</li>
+     * <li>MST - -07:00</li>
+     * <li>ACT - Australia/Darwin</li>
+     * <li>AET - Australia/Sydney</li>
+     * <li>AGT - America/Argentina/Buenos_Aires</li>
+     * <li>ART - Africa/Cairo</li>
+     * <li>AST - America/Anchorage</li>
+     * <li>BET - America/Sao_Paulo</li>
+     * <li>BST - Asia/Dhaka</li>
+     * <li>CAT - Africa/Harare</li>
+     * <li>CNT - America/St_Johns</li>
+     * <li>CST - America/Chicago</li>
+     * <li>CTT - Asia/Shanghai</li>
+     * <li>EAT - Africa/Addis_Ababa</li>
+     * <li>ECT - Europe/Paris</li>
+     * <li>IET - America/Indiana/Indianapolis</li>
+     * <li>IST - Asia/Kolkata</li>
+     * <li>JST - Asia/Tokyo</li>
+     * <li>MIT - Pacific/Apia</li>
+     * <li>NET - Asia/Yerevan</li>
+     * <li>NST - Pacific/Auckland</li>
+     * <li>PLT - Asia/Karachi</li>
+     * <li>PNT - America/Phoenix</li>
+     * <li>PRT - America/Puerto_Rico</li>
+     * <li>PST - America/Los_Angeles</li>
+     * <li>SST - Pacific/Guadalcanal</li>
+     * <li>VST - Asia/Ho_Chi_Minh</li>
+     * </ul>
+     * <p>
+     * The map is unmodifiable.
+     */
+    public static final Map<String, String> OLD_IDS_POST_2005;
 
-  // -----------------------------------------------------------------------
-  /**
-   * Gets the system default time-zone.
-   * <p>
-   * This queries {@link TimeZone#getDefault()} to find the default time-zone and converts it to a
-   * {@code ZoneId}. If the system default time-zone is changed, then the result of this method will also
-   * change.
-   * 
-   * @return the zone ID, not null
-   * @throws DateTimeException if the converted zone ID has an invalid format
-   * @throws ZoneRulesException if the converted zone region ID cannot be found
-   */
-  public static ZoneId systemDefault() {
+    static {
+        Map<String, String> base = new HashMap<String, String>();
+        base.put("ACT", "Australia/Darwin");
+        base.put("AET", "Australia/Sydney");
+        base.put("AGT", "America/Argentina/Buenos_Aires");
+        base.put("ART", "Africa/Cairo");
+        base.put("AST", "America/Anchorage");
+        base.put("BET", "America/Sao_Paulo");
+        base.put("BST", "Asia/Dhaka");
+        base.put("CAT", "Africa/Harare");
+        base.put("CNT", "America/St_Johns");
+        base.put("CST", "America/Chicago");
+        base.put("CTT", "Asia/Shanghai");
+        base.put("EAT", "Africa/Addis_Ababa");
+        base.put("ECT", "Europe/Paris");
+        base.put("IET", "America/Indiana/Indianapolis");
+        base.put("IST", "Asia/Kolkata");
+        base.put("JST", "Asia/Tokyo");
+        base.put("MIT", "Pacific/Apia");
+        base.put("NET", "Asia/Yerevan");
+        base.put("NST", "Pacific/Auckland");
+        base.put("PLT", "Asia/Karachi");
+        base.put("PNT", "America/Phoenix");
+        base.put("PRT", "America/Puerto_Rico");
+        base.put("PST", "America/Los_Angeles");
+        base.put("SST", "Pacific/Guadalcanal");
+        base.put("VST", "Asia/Ho_Chi_Minh");
+        Map<String, String> pre = new HashMap<String, String>(base);
+        pre.put("EST", "America/Indianapolis");
+        pre.put("MST", "America/Phoenix");
+        pre.put("HST", "Pacific/Honolulu");
+        OLD_IDS_PRE_2005 = Collections.unmodifiableMap(pre);
+        Map<String, String> post = new HashMap<String, String>(base);
+        post.put("EST", "-05:00");
+        post.put("MST", "-07:00");
+        post.put("HST", "-10:00");
+        OLD_IDS_POST_2005 = Collections.unmodifiableMap(post);
+    }
 
-    // return ZoneId.of(TimeZone.getDefault().getID(), OLD_IDS_POST_2005);
-    return ZoneOffset.UTC;
-  }
+    // -----------------------------------------------------------------------
 
-  // -----------------------------------------------------------------------
-  /**
-   * Obtains an instance of {@code ZoneId} using its ID using a map of aliases to supplement the standard zone
-   * IDs.
-   * <p>
-   * Many users of time-zones use short abbreviations, such as PST for 'Pacific Standard Time' and PDT for
-   * 'Pacific Daylight Time'. These abbreviations are not unique, and so cannot be used as IDs. This method
-   * allows a map of string to time-zone to be setup and reused within an application.
-   * 
-   * @param zoneId the time-zone ID, not null
-   * @param aliasMap a map of alias zone IDs (typically abbreviations) to real zone IDs, not null
-   * @return the zone ID, not null
-   * @throws DateTimeException if the zone ID has an invalid format
-   * @throws ZoneRulesException if the zone region ID cannot be found
-   */
-  public static ZoneId of(String zoneId, Map<String, String> aliasMap) {
+    /**
+     * Gets the system default time-zone.
+     * <p>
+     * This queries {@link TimeZone#getDefault()} to find the default time-zone and converts it to a
+     * {@code ZoneId}. If the system default time-zone is changed, then the result of this method will also
+     * change.
+     *
+     * @return the zone ID, not null
+     * @throws DateTimeException  if the converted zone ID has an invalid format
+     * @throws ZoneRulesException if the converted zone region ID cannot be found
+     */
+    public static ZoneId systemDefault() {
 
-    Jdk7Methods.Objects_requireNonNull(zoneId, "zoneId");
-    Jdk7Methods.Objects_requireNonNull(aliasMap, "aliasMap");
-    String id = aliasMap.get(zoneId);
-    id = (id != null ? id : zoneId);
-    return of(id);
-  }
-
-  /**
-   * Obtains an instance of {@code ZoneId} from an ID ensuring that the ID is valid and available for use.
-   * <p>
-   * This method parses the ID, applies any appropriate normalization, and validates it against the known set
-   * of IDs for which rules are available.
-   * <p>
-   * An ID is parsed as though it is an offset ID if it starts with 'UTC', 'GMT', '+' or '-', or if it has
-   * less then two letters. The offset of {@link ZoneOffset#UTC zero} may be represented in multiple ways,
-   * including 'Z', 'UTC', 'GMT', 'UTC0' 'GMT0', '+00:00', '-00:00' and 'UTC+00:00'.
-   * <p>
-   * Eight forms of ID are recognized, where '{offset}' means to parse using {@link ZoneOffset#of(String)}:
-   * <p>
-   * <ul>
-   * <li><code>{offset}</code> - a {@link ZoneOffset} ID, such as 'Z' or '+02:00'
-   * <li><code>UTC</code> - alternate form of a {@code ZoneOffset} ID equal to 'Z'
-   * <li><code>UTC0</code> - alternate form of a {@code ZoneOffset} ID equal to 'Z'
-   * <li><code>UTC{offset}</code> - alternate form of a {@code ZoneOffset} ID equal to '{offset}'
-   * <li><code>GMT</code> - alternate form of a {@code ZoneOffset} ID equal to 'Z'
-   * <li><code>GMT0</code> - alternate form of a {@code ZoneOffset} ID equal to 'Z'
-   * <li><code>GMT{offset}</code> - alternate form of a {@code ZoneOffset} ID equal to '{offset}'r
-   * <li><code>{regionID}</code> - full region ID, loaded from configuration
-   * </ul>
-   * <p>
-   * Region IDs must match the regular expression <code>[A-Za-z][A-Za-z0-9~/._+-]+</code>.
-   * <p>
-   * The detailed format of the region ID depends on the group supplying the data. The default set of data is
-   * supplied by the IANA Time Zone Database (TZDB) This has region IDs of the form '{area}/{city}', such as
-   * 'Europe/Paris' or 'America/New_York'. This is compatible with most IDs from {@link java.util.TimeZone}.
-   * 
-   * @param zoneId the time-zone ID, not null
-   * @return the zone ID, not null
-   * @throws DateTimeException if the zone ID has an invalid format
-   * @throws ZoneRulesException if the zone region ID cannot be found
-   */
-  public static ZoneId of(String zoneId) {
-
-    Jdk7Methods.Objects_requireNonNull(zoneId, "zoneId");
-    if (zoneId.length() <= 1 || zoneId.startsWith("+") || zoneId.startsWith("-")) {
-      return ZoneOffset.of(zoneId);
-    } else if (zoneId.startsWith("UTC") || zoneId.startsWith("GMT")) {
-      if (zoneId.length() == 3 || (zoneId.length() == 4 && zoneId.charAt(3) == '0')) {
+        // return ZoneId.of(TimeZone.getDefault().getID(), OLD_IDS_POST_2005);
         return ZoneOffset.UTC;
-      }
-      return ZoneOffset.of(zoneId.substring(3));
     }
-    throw new DateTimeParseException("Illegal zoneId (GWT) " + zoneId, zoneId, 0);
-  }
 
-  // -----------------------------------------------------------------------
-  /**
-   * Obtains an instance of {@code ZoneId} from a date-time object.
-   * <p>
-   * A {@code DateTimeAccessor} represents some form of date and time information. This factory converts the
-   * arbitrary date-time object to an instance of {@code ZoneId}.
-   * 
-   * @param dateTime the date-time object to convert, not null
-   * @return the zone ID, not null
-   * @throws DateTimeException if unable to convert to a {@code ZoneId}
-   */
-  public static ZoneId from(DateTimeAccessor dateTime) {
+    // -----------------------------------------------------------------------
 
-    ZoneId obj = dateTime.query(Query.ZONE_ID);
-    if (obj == null) {
-      throw new DateTimeException("Unable to convert DateTimeAccessor to ZoneId: " + dateTime.getClass());
+    /**
+     * Obtains an instance of {@code ZoneId} using its ID using a map of aliases to supplement the standard zone
+     * IDs.
+     * <p>
+     * Many users of time-zones use short abbreviations, such as PST for 'Pacific Standard Time' and PDT for
+     * 'Pacific Daylight Time'. These abbreviations are not unique, and so cannot be used as IDs. This method
+     * allows a map of string to time-zone to be setup and reused within an application.
+     *
+     * @param zoneId   the time-zone ID, not null
+     * @param aliasMap a map of alias zone IDs (typically abbreviations) to real zone IDs, not null
+     * @return the zone ID, not null
+     * @throws DateTimeException  if the zone ID has an invalid format
+     * @throws ZoneRulesException if the zone region ID cannot be found
+     */
+    public static ZoneId of(String zoneId, Map<String, String> aliasMap) {
+
+        Jdk7Methods.Objects_requireNonNull(zoneId, "zoneId");
+        Jdk7Methods.Objects_requireNonNull(aliasMap, "aliasMap");
+        String id = aliasMap.get(zoneId);
+        id = (id != null ? id : zoneId);
+        return of(id);
     }
-    return obj;
-  }
 
-  // -----------------------------------------------------------------------
-  /**
-   * Constructor only accessible within the package.
-   */
-  ZoneId() {
+    /**
+     * Obtains an instance of {@code ZoneId} from an ID ensuring that the ID is valid and available for use.
+     * <p>
+     * This method parses the ID, applies any appropriate normalization, and validates it against the known set
+     * of IDs for which rules are available.
+     * <p>
+     * An ID is parsed as though it is an offset ID if it starts with 'UTC', 'GMT', '+' or '-', or if it has
+     * less then two letters. The offset of {@link ZoneOffset#UTC zero} may be represented in multiple ways,
+     * including 'Z', 'UTC', 'GMT', 'UTC0' 'GMT0', '+00:00', '-00:00' and 'UTC+00:00'.
+     * <p>
+     * Eight forms of ID are recognized, where '{offset}' means to parse using {@link ZoneOffset#of(String)}:
+     * <p>
+     * <ul>
+     * <li><code>{offset}</code> - a {@link ZoneOffset} ID, such as 'Z' or '+02:00'
+     * <li><code>UTC</code> - alternate form of a {@code ZoneOffset} ID equal to 'Z'
+     * <li><code>UTC0</code> - alternate form of a {@code ZoneOffset} ID equal to 'Z'
+     * <li><code>UTC{offset}</code> - alternate form of a {@code ZoneOffset} ID equal to '{offset}'
+     * <li><code>GMT</code> - alternate form of a {@code ZoneOffset} ID equal to 'Z'
+     * <li><code>GMT0</code> - alternate form of a {@code ZoneOffset} ID equal to 'Z'
+     * <li><code>GMT{offset}</code> - alternate form of a {@code ZoneOffset} ID equal to '{offset}'r
+     * <li><code>{regionID}</code> - full region ID, loaded from configuration
+     * </ul>
+     * <p>
+     * Region IDs must match the regular expression <code>[A-Za-z][A-Za-z0-9~/._+-]+</code>.
+     * <p>
+     * The detailed format of the region ID depends on the group supplying the data. The default set of data is
+     * supplied by the IANA Time Zone Database (TZDB) This has region IDs of the form '{area}/{city}', such as
+     * 'Europe/Paris' or 'America/New_York'. This is compatible with most IDs from {@link java.util.TimeZone}.
+     *
+     * @param zoneId the time-zone ID, not null
+     * @return the zone ID, not null
+     * @throws DateTimeException  if the zone ID has an invalid format
+     * @throws ZoneRulesException if the zone region ID cannot be found
+     */
+    public static ZoneId of(String zoneId) {
 
-    if (getClass() != ZoneOffset.class) {
-      throw new AssertionError("Invalid subclass");
+        Jdk7Methods.Objects_requireNonNull(zoneId, "zoneId");
+        if (zoneId.length() <= 1 || zoneId.startsWith("+") || zoneId.startsWith("-")) {
+            return ZoneOffset.of(zoneId);
+        } else if (zoneId.startsWith("UTC") || zoneId.startsWith("GMT")) {
+            if (zoneId.length() == 3 || (zoneId.length() == 4 && zoneId.charAt(3) == '0')) {
+                return ZoneOffset.UTC;
+            }
+            return ZoneOffset.of(zoneId.substring(3));
+        }
+        throw new DateTimeParseException("Illegal zoneId (GWT) " + zoneId, zoneId, 0);
     }
-  }
 
-  // -----------------------------------------------------------------------
-  /**
-   * Gets the unique time-zone ID.
-   * <p>
-   * This ID uniquely defines this object. The format of an offset based ID is defined by
-   * {@link ZoneOffset#getId()}.
-   * 
-   * @return the time-zone unique ID, not null
-   */
-  public abstract String getId();
+    // -----------------------------------------------------------------------
 
-  // -----------------------------------------------------------------------
-  /**
-   * Gets the time-zone rules for this ID allowing calculations to be performed.
-   * <p>
-   * The rules provide the functionality associated with a time-zone, such as finding the offset for a given
-   * instant or local date-time.
-   * <p>
-   * A time-zone can be invalid if it is deserialized in a JVM which does not have the same rules loaded as
-   * the JVM that stored it. In this case, calling this method will throw an exception.
-   * <p>
-   * The rules are supplied by {@link ZoneRulesProvider}. An advanced provider may support dynamic updates to
-   * the rules without restarting the JVM. If so, then the result of this method may change over time. Each
-   * individual call will be still remain thread-safe.
-   * <p>
-   * {@link ZoneOffset} will always return a set of rules where the offset never changes.
-   * 
-   * @return the rules, not null
-   * @throws DateTimeException if no rules are available for this ID
-   */
-  public abstract ZoneRules getRules();
+    /**
+     * Obtains an instance of {@code ZoneId} from a date-time object.
+     * <p>
+     * A {@code DateTimeAccessor} represents some form of date and time information. This factory converts the
+     * arbitrary date-time object to an instance of {@code ZoneId}.
+     *
+     * @param dateTime the date-time object to convert, not null
+     * @return the zone ID, not null
+     * @throws DateTimeException if unable to convert to a {@code ZoneId}
+     */
+    public static ZoneId from(DateTimeAccessor dateTime) {
 
-  // -----------------------------------------------------------------------
-  /**
-   * Gets the textual representation of the zone, such as 'British Time' or '+02:00'.
-   * <p>
-   * This returns a textual description for the time-zone ID.
-   * <p>
-   * If no textual mapping is found then the {@link #getId() full ID} is returned.
-   * 
-   * @param style the length of the text required, not null
-   * @param locale the locale to use, not null
-   * @return the text value of the zone, not null
-   */
-  public String getText(TextStyle style, Locale locale) {
-
-    return getId();
-  }
-
-  // -----------------------------------------------------------------------
-  /**
-   * Checks if this time-zone ID is equal to another time-zone ID.
-   * <p>
-   * The comparison is based on the ID.
-   * 
-   * @param obj the object to check, null returns false
-   * @return true if this is equal to the other time-zone ID
-   */
-  @Override
-  public boolean equals(Object obj) {
-
-    if (this == obj) {
-      return true;
+        ZoneId obj = dateTime.query(Query.ZONE_ID);
+        if (obj == null) {
+            throw new DateTimeException("Unable to convert DateTimeAccessor to ZoneId: " + dateTime.getClass());
+        }
+        return obj;
     }
-    if (obj instanceof ZoneId) {
-      ZoneId other = (ZoneId) obj;
-      return getId().equals(other.getId());
+
+    // -----------------------------------------------------------------------
+
+    /**
+     * Constructor only accessible within the package.
+     */
+    ZoneId() {
+
+        if (getClass() != ZoneOffset.class) {
+            throw new AssertionError("Invalid subclass");
+        }
     }
-    return false;
-  }
 
-  /**
-   * A hash code for this time-zone ID.
-   * 
-   * @return a suitable hash code
-   */
-  @Override
-  public int hashCode() {
+    // -----------------------------------------------------------------------
 
-    return getId().hashCode();
-  }
+    /**
+     * Gets the unique time-zone ID.
+     * <p>
+     * This ID uniquely defines this object. The format of an offset based ID is defined by
+     * {@link ZoneOffset#getId()}.
+     *
+     * @return the time-zone unique ID, not null
+     */
+    public abstract String getId();
 
-  // -----------------------------------------------------------------------
-  /**
-   * Outputs this zone as a {@code String}, using the ID.
-   * 
-   * @return a string representation of this time-zone ID, not null
-   */
-  @Override
-  public String toString() {
+    // -----------------------------------------------------------------------
 
-    return getId();
-  }
+    /**
+     * Gets the time-zone rules for this ID allowing calculations to be performed.
+     * <p>
+     * The rules provide the functionality associated with a time-zone, such as finding the offset for a given
+     * instant or local date-time.
+     * <p>
+     * A time-zone can be invalid if it is deserialized in a JVM which does not have the same rules loaded as
+     * the JVM that stored it. In this case, calling this method will throw an exception.
+     * <p>
+     * The rules are supplied by {@link ZoneRulesProvider}. An advanced provider may support dynamic updates to
+     * the rules without restarting the JVM. If so, then the result of this method may change over time. Each
+     * individual call will be still remain thread-safe.
+     * <p>
+     * {@link ZoneOffset} will always return a set of rules where the offset never changes.
+     *
+     * @return the rules, not null
+     * @throws DateTimeException if no rules are available for this ID
+     */
+    public abstract ZoneRules getRules();
+
+    // -----------------------------------------------------------------------
+
+    /**
+     * Gets the textual representation of the zone, such as 'British Time' or '+02:00'.
+     * <p>
+     * This returns a textual description for the time-zone ID.
+     * <p>
+     * If no textual mapping is found then the {@link #getId() full ID} is returned.
+     *
+     * @param style  the length of the text required, not null
+     * @param locale the locale to use, not null
+     * @return the text value of the zone, not null
+     */
+    public String getText(TextStyle style, Locale locale) {
+
+        return getId();
+    }
+
+    // -----------------------------------------------------------------------
+
+    /**
+     * Checks if this time-zone ID is equal to another time-zone ID.
+     * <p>
+     * The comparison is based on the ID.
+     *
+     * @param obj the object to check, null returns false
+     * @return true if this is equal to the other time-zone ID
+     */
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof ZoneId) {
+            ZoneId other = (ZoneId) obj;
+            return getId().equals(other.getId());
+        }
+        return false;
+    }
+
+    /**
+     * A hash code for this time-zone ID.
+     *
+     * @return a suitable hash code
+     */
+    @Override
+    public int hashCode() {
+
+        return getId().hashCode();
+    }
+
+    // -----------------------------------------------------------------------
+
+    /**
+     * Outputs this zone as a {@code String}, using the ID.
+     *
+     * @return a string representation of this time-zone ID, not null
+     */
+    @Override
+    public String toString() {
+
+        return getId();
+    }
 
 }

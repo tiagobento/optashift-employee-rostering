@@ -1,13 +1,5 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.tenant;
 
-import java.time.DayOfWeek;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.event.Event;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Any;
-import javax.inject.Inject;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -23,6 +15,13 @@ import org.optaplanner.openshift.employeerostering.gwtui.client.common.FailureSh
 import org.optaplanner.openshift.employeerostering.gwtui.client.tenant.ConfigurationEditor.Views;
 import org.optaplanner.openshift.employeerostering.shared.tenant.Tenant;
 import org.optaplanner.openshift.employeerostering.shared.tenant.TenantRestServiceBuilder;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Any;
+import javax.inject.Inject;
+import java.time.DayOfWeek;
 
 @Templated
 public class TenantConfigurationEditor implements IsElement {
@@ -82,14 +81,14 @@ public class TenantConfigurationEditor implements IsElement {
     public void onAnyTenantEvent(@Observes Tenant tenant) {
         this.tenant = tenant;
         weekStart.setSelectedIndex(tenant.getConfiguration().getWeekStart().getValue() - 1);
-        templateDuration.setSelectedIndex(templateDurationIndexBiMap.get(tenant.getConfiguration()
-                                                                             .getTemplateDuration()));
+        templateDuration.setSelectedIndex(templateDurationIndexBiMap.get(tenant.getConfiguration().getTemplateDuration()));
         desiredWeightInput.setValue(tenant.getConfiguration().getDesiredTimeSlotWeight());
         undesiredWeightInput.setValue(tenant.getConfiguration().getUndesiredTimeSlotWeight());
         refresh();
     }
 
-    public void refresh() {}
+    public void refresh() {
+    }
 
     public void setConfigurationEditor(ConfigurationEditor configurationEditor) {
         this.configurationEditor = configurationEditor;
@@ -97,20 +96,18 @@ public class TenantConfigurationEditor implements IsElement {
 
     @EventHandler("updateConfig")
     private void onUpdateConfigClick(ClickEvent e) {
-        tenant.getConfiguration().setTemplateDuration(templateDurationIndexBiMap.inverse().get(templateDuration
-                                                                                                             .getSelectedIndex()));
+        tenant.getConfiguration().setTemplateDuration(templateDurationIndexBiMap.inverse().get(templateDuration.getSelectedIndex()));
         tenant.getConfiguration().setWeekStart(DayOfWeek.valueOf(weekStart.getSelectedItemText()));
         tenant.getConfiguration().setDesiredTimeSlotWeight(desiredWeightInput.getValue());
         tenant.getConfiguration().setUndesiredTimeSlotWeight(undesiredWeightInput.getValue());
-        TenantRestServiceBuilder.updateTenantConfiguration(tenant.getConfiguration(),
-                                                           new FailureShownRestCallback<Tenant>() {
+        TenantRestServiceBuilder.updateTenantConfiguration(tenant.getConfiguration(), new FailureShownRestCallback<Tenant>() {
 
-                                                               @Override
-                                                               public void onSuccess(Tenant newConfig) {
-                                                                   tenant.setConfiguration(newConfig.getConfiguration());
-                                                                   tenantEvent.fire(newConfig);
-                                                               }
-                                                           });
+            @Override
+            public void onSuccess(Tenant newConfig) {
+                tenant.setConfiguration(newConfig.getConfiguration());
+                tenantEvent.fire(newConfig);
+            }
+        });
     }
 
     @EventHandler("templateEditorButton")

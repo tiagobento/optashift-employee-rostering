@@ -31,6 +31,11 @@
  */
 package java.time.calendrical;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.calendrical.PeriodUnit.PeriodBetween;
+import java.time.jdk8.Jdk8Methods;
+
 import static java.time.DayOfWeek.THURSDAY;
 import static java.time.DayOfWeek.WEDNESDAY;
 import static java.time.calendrical.ChronoField.DAY_OF_WEEK;
@@ -39,11 +44,6 @@ import static java.time.calendrical.ChronoField.YEAR;
 import static java.time.calendrical.ChronoUnit.FOREVER;
 import static java.time.calendrical.ChronoUnit.WEEKS;
 import static java.time.calendrical.ChronoUnit.YEARS;
-
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.calendrical.PeriodUnit.PeriodBetween;
-import java.time.jdk8.Jdk8Methods;
 
 /**
  * Fields and units supporting the week-based-year defined by ISO-8601.
@@ -123,344 +123,346 @@ import java.time.jdk8.Jdk8Methods;
  */
 public final class ISOWeeks {
 
-  /**
-   * The field that represents the week-of-week-based-year.
-   * <p>
-   * This field allows the week of the week-based-year value to be queried and set.
-   * <p>
-   * This unit is an immutable and thread-safe enum.
-   */
-  public static final DateTimeField WEEK_OF_WEEK_BASED_YEAR = Field.WEEK_OF_WEEK_BASED_YEAR;
+    /**
+     * The field that represents the week-of-week-based-year.
+     * <p>
+     * This field allows the week of the week-based-year value to be queried and set.
+     * <p>
+     * This unit is an immutable and thread-safe enum.
+     */
+    public static final DateTimeField WEEK_OF_WEEK_BASED_YEAR = Field.WEEK_OF_WEEK_BASED_YEAR;
 
-  /**
-   * The field that represents the week-based-year.
-   * <p>
-   * This field allows the week-based-year value to be queried and set.
-   * <p>
-   * This unit is an immutable and thread-safe enum.
-   */
-  public static final DateTimeField WEEK_BASED_YEAR = Field.WEEK_BASED_YEAR;
+    /**
+     * The field that represents the week-based-year.
+     * <p>
+     * This field allows the week-based-year value to be queried and set.
+     * <p>
+     * This unit is an immutable and thread-safe enum.
+     */
+    public static final DateTimeField WEEK_BASED_YEAR = Field.WEEK_BASED_YEAR;
 
-  /**
-   * The unit that represents week-based-years for the purpose of addition and subtraction.
-   * <p>
-   * This allows a number of week-based-years to be added to, or subtracted from, a date. The unit is equal to
-   * either 52 or 53 weeks. The estimated duration of a week-based-year is the same as that of a standard ISO
-   * year at {@code 365.2425 Days}.
-   * <p>
-   * The rules for addition add the number of week-based-years to the existing value for the week-based-year
-   * field. If the resulting week-based-year only has 52 weeks, then the date will be in week 1 of the
-   * following week-based-year.
-   * <p>
-   * This unit is an immutable and thread-safe enum.
-   */
-  public static final PeriodUnit WEEK_BASED_YEARS = Unit.WEEK_BASED_YEARS;
+    /**
+     * The unit that represents week-based-years for the purpose of addition and subtraction.
+     * <p>
+     * This allows a number of week-based-years to be added to, or subtracted from, a date. The unit is equal to
+     * either 52 or 53 weeks. The estimated duration of a week-based-year is the same as that of a standard ISO
+     * year at {@code 365.2425 Days}.
+     * <p>
+     * The rules for addition add the number of week-based-years to the existing value for the week-based-year
+     * field. If the resulting week-based-year only has 52 weeks, then the date will be in week 1 of the
+     * following week-based-year.
+     * <p>
+     * This unit is an immutable and thread-safe enum.
+     */
+    public static final PeriodUnit WEEK_BASED_YEARS = Unit.WEEK_BASED_YEARS;
 
-  /**
-   * Restricted constructor.
-   */
-  private ISOWeeks() {
+    /**
+     * Restricted constructor.
+     */
+    private ISOWeeks() {
 
-    throw new AssertionError("Not instantiable");
-  }
-
-  // -----------------------------------------------------------------------
-  /**
-   * Implementation of the field.
-   */
-  private static enum Field implements DateTimeField {
-    WEEK_OF_WEEK_BASED_YEAR {
-
-      @Override
-      public String getName() {
-
-        return "WeekOfWeekBasedYear";
-      }
-
-      @Override
-      public PeriodUnit getBaseUnit() {
-
-        return WEEKS;
-      }
-
-      @Override
-      public PeriodUnit getRangeUnit() {
-
-        return WEEK_BASED_YEARS;
-      }
-
-      @Override
-      public DateTimeValueRange range() {
-
-        return DateTimeValueRange.of(1, 52, 53);
-      }
-
-      @Override
-      public boolean doIsSupported(DateTimeAccessor dateTime) {
-
-        return dateTime.isSupported(EPOCH_DAY);
-      }
-
-      @Override
-      public DateTimeValueRange doRange(DateTimeAccessor dateTime) {
-
-        return getWeekRange(LocalDate.from(dateTime));
-      }
-
-      @Override
-      public long doGet(DateTimeAccessor dateTime) {
-
-        return getWeek(LocalDate.from(dateTime));
-      }
-
-      @Override
-      public <R extends DateTime> R doWith(R dateTime, long newValue) {
-
-        DateTimeValueRange.of(1, 53).checkValidValue(newValue, this);
-        return (R) dateTime.plus(Jdk8Methods.safeSubtract(newValue, doGet(dateTime)), WEEKS);
-      }
-    },
-    WEEK_BASED_YEAR {
-
-      @Override
-      public String getName() {
-
-        return "WeekBasedYear";
-      }
-
-      @Override
-      public PeriodUnit getBaseUnit() {
-
-        return WEEK_BASED_YEARS;
-      }
-
-      @Override
-      public PeriodUnit getRangeUnit() {
-
-        return FOREVER;
-      }
-
-      @Override
-      public DateTimeValueRange range() {
-
-        return YEAR.range();
-      }
-
-      @Override
-      public boolean doIsSupported(DateTimeAccessor dateTime) {
-
-        return dateTime.isSupported(EPOCH_DAY);
-      }
-
-      @Override
-      public DateTimeValueRange doRange(DateTimeAccessor dateTime) {
-
-        return YEAR.range();
-      }
-
-      @Override
-      public long doGet(DateTimeAccessor dateTime) {
-
-        return getWeekBasedYear(LocalDate.from(dateTime));
-      }
-
-      @Override
-      public <R extends DateTime> R doWith(R dateTime, long newValue) {
-
-        int newVal = range().checkValidIntValue(newValue, WEEK_BASED_YEAR);
-        LocalDate date = LocalDate.from(dateTime);
-        int week = getWeek(date);
-        date = date.withDayOfYear(180).withYear(newVal).with(WEEK_OF_WEEK_BASED_YEAR, week);
-        return (R) date.with(date);
-      }
-    };
-
-    @Override
-    public boolean resolve(DateTimeBuilder builder, long value) {
-
-      Long[] values = builder.queryFieldValues(WEEK_BASED_YEAR, WEEK_OF_WEEK_BASED_YEAR, DAY_OF_WEEK);
-      if (values[0] != null && values[1] != null && values[2] != null) {
-        int wby = WEEK_BASED_YEAR.range().checkValidIntValue(values[0], WEEK_BASED_YEAR);
-        int week = WEEK_OF_WEEK_BASED_YEAR.range().checkValidIntValue(values[1], WEEK_OF_WEEK_BASED_YEAR);
-        int dow = DAY_OF_WEEK.range().checkValidIntValue(values[2], DAY_OF_WEEK);
-        LocalDate date = LocalDate.of(wby, 2, 1).with(WEEK_OF_WEEK_BASED_YEAR, week).with(DAY_OF_WEEK, dow);
-        builder.addFieldValue(EPOCH_DAY, date.toEpochDay());
-        builder.removeFieldValues(WEEK_BASED_YEAR, WEEK_OF_WEEK_BASED_YEAR, DAY_OF_WEEK);
-      }
-      return false;
+        throw new AssertionError("Not instantiable");
     }
 
-    // JDK8 default interface
-    // -------------------------------------------------------------------------
-    @Override
-    public int compare(DateTimeAccessor dateTime1, DateTimeAccessor dateTime2) {
+    // -----------------------------------------------------------------------
 
-      // return Long.compare(dateTime1.getLong(this), dateTime2.getLong(this));
-      long x = dateTime1.getLong(this);
-      long y = dateTime2.getLong(this);
-      return (x < y) ? -1 : ((x == y) ? 0 : 1);
-    }
+    /**
+     * Implementation of the field.
+     */
+    private static enum Field implements DateTimeField {
+        WEEK_OF_WEEK_BASED_YEAR {
+            @Override
+            public String getName() {
 
-    private static DateTimeValueRange getWeekRange(LocalDate date) {
+                return "WeekOfWeekBasedYear";
+            }
 
-      int wby = getWeekBasedYear(date);
-      date = date.withDayOfYear(1).withYear(wby);
-      // 53 weeks if standard year starts on Thursday, or Wed in a leap year
-      if (date.getDayOfWeek() == THURSDAY || (date.getDayOfWeek() == WEDNESDAY && date.isLeapYear())) {
-        return DateTimeValueRange.of(1, 53);
-      }
-      return DateTimeValueRange.of(1, 52);
-    }
+            @Override
+            public PeriodUnit getBaseUnit() {
 
-    private static int getWeek(LocalDate date) {
+                return WEEKS;
+            }
 
-      int dow0 = date.getDayOfWeek().ordinal();
-      int doy0 = date.getDayOfYear() - 1;
-      int doyThu0 = doy0 + (3 - dow0); // adjust to mid-week Thursday (which is 3 indexed from zero)
-      int alignedWeek = doyThu0 / 7;
-      int firstThuDoy0 = doyThu0 - (alignedWeek * 7);
-      int firstMonDoy0 = firstThuDoy0 - 3;
-      if (firstMonDoy0 < -3) {
-        firstMonDoy0 += 7;
-      }
-      if (doy0 < firstMonDoy0) {
-        return (int) getWeekRange(date.withDayOfYear(180).minusYears(1)).getMaximum();
-      }
-      int week = ((doy0 - firstMonDoy0) / 7) + 1;
-      if (week == 53) {
-        if ((firstMonDoy0 == -3 || (firstMonDoy0 == -2 && date.isLeapYear())) == false) {
-          week = 1;
+            @Override
+            public PeriodUnit getRangeUnit() {
+
+                return WEEK_BASED_YEARS;
+            }
+
+            @Override
+            public DateTimeValueRange range() {
+
+                return DateTimeValueRange.of(1, 52, 53);
+            }
+
+            @Override
+            public boolean doIsSupported(DateTimeAccessor dateTime) {
+
+                return dateTime.isSupported(EPOCH_DAY);
+            }
+
+            @Override
+            public DateTimeValueRange doRange(DateTimeAccessor dateTime) {
+
+                return getWeekRange(LocalDate.from(dateTime));
+            }
+
+            @Override
+            public long doGet(DateTimeAccessor dateTime) {
+
+                return getWeek(LocalDate.from(dateTime));
+            }
+
+            @Override
+            public <R extends DateTime> R doWith(R dateTime, long newValue) {
+
+                DateTimeValueRange.of(1, 53).checkValidValue(newValue, this);
+                return (R) dateTime.plus(Jdk8Methods.safeSubtract(newValue, doGet(dateTime)), WEEKS);
+            }
+        }, WEEK_BASED_YEAR {
+            @Override
+            public String getName() {
+
+                return "WeekBasedYear";
+            }
+
+            @Override
+            public PeriodUnit getBaseUnit() {
+
+                return WEEK_BASED_YEARS;
+            }
+
+            @Override
+            public PeriodUnit getRangeUnit() {
+
+                return FOREVER;
+            }
+
+            @Override
+            public DateTimeValueRange range() {
+
+                return YEAR.range();
+            }
+
+            @Override
+            public boolean doIsSupported(DateTimeAccessor dateTime) {
+
+                return dateTime.isSupported(EPOCH_DAY);
+            }
+
+            @Override
+            public DateTimeValueRange doRange(DateTimeAccessor dateTime) {
+
+                return YEAR.range();
+            }
+
+            @Override
+            public long doGet(DateTimeAccessor dateTime) {
+
+                return getWeekBasedYear(LocalDate.from(dateTime));
+            }
+
+            @Override
+            public <R extends DateTime> R doWith(R dateTime, long newValue) {
+
+                int newVal = range().checkValidIntValue(newValue, WEEK_BASED_YEAR);
+                LocalDate date = LocalDate.from(dateTime);
+                int week = getWeek(date);
+                date = date.withDayOfYear(180).withYear(newVal).with(WEEK_OF_WEEK_BASED_YEAR, week);
+                return (R) date.with(date);
+            }
+        };
+
+        @Override
+        public boolean resolve(DateTimeBuilder builder, long value) {
+
+            Long[] values = builder.queryFieldValues(WEEK_BASED_YEAR, WEEK_OF_WEEK_BASED_YEAR, DAY_OF_WEEK);
+            if (values[0] != null && values[1] != null && values[2] != null) {
+                int wby = WEEK_BASED_YEAR.range().checkValidIntValue(values[0], WEEK_BASED_YEAR);
+                int week = WEEK_OF_WEEK_BASED_YEAR.range().checkValidIntValue(values[1], WEEK_OF_WEEK_BASED_YEAR);
+                int dow = DAY_OF_WEEK.range().checkValidIntValue(values[2], DAY_OF_WEEK);
+                LocalDate date = LocalDate.of(wby, 2, 1).with(WEEK_OF_WEEK_BASED_YEAR, week).with(DAY_OF_WEEK, dow);
+                builder.addFieldValue(EPOCH_DAY, date.toEpochDay());
+                builder.removeFieldValues(WEEK_BASED_YEAR, WEEK_OF_WEEK_BASED_YEAR, DAY_OF_WEEK);
+            }
+            return false;
         }
-      }
-      return week;
-    }
 
-    private static int getWeekBasedYear(LocalDate date) {
+        // JDK8 default interface
+        // -------------------------------------------------------------------------
+        @Override
+        public int compare(DateTimeAccessor dateTime1, DateTimeAccessor dateTime2) {
 
-      int year = date.getYear();
-      int doy = date.getDayOfYear();
-      if (doy <= 3) {
-        int dow = date.getDayOfWeek().ordinal();
-        if (doy - dow < -2) {
-          year--;
+            // return Long.compare(dateTime1.getLong(this), dateTime2.getLong(this));
+            long x = dateTime1.getLong(this);
+            long y = dateTime2.getLong(this);
+            return (x < y) ? -1 : ((x == y) ? 0 : 1);
         }
-      } else if (doy >= 363) {
-        int dow = date.getDayOfWeek().ordinal();
-        doy = doy - 363 - (date.isLeapYear() ? 1 : 0);
-        if (doy - dow >= 0) {
-          year++;
+
+        private static DateTimeValueRange getWeekRange(LocalDate date) {
+
+            int wby = getWeekBasedYear(date);
+            date = date.withDayOfYear(1).withYear(wby);
+            // 53 weeks if standard year starts on Thursday, or Wed in a leap year
+            if (date.getDayOfWeek() == THURSDAY || (date.getDayOfWeek() == WEDNESDAY && date.isLeapYear())) {
+                return DateTimeValueRange.of(1, 53);
+            }
+            return DateTimeValueRange.of(1, 52);
         }
-      }
-      return year;
-    }
-  }
 
-  // -----------------------------------------------------------------------
-  /**
-   * Implementation of the period unit.
-   */
-  private static enum Unit implements PeriodUnit {
-    WEEK_BASED_YEARS;
+        private static int getWeek(LocalDate date) {
 
-    @Override
-    public String getName() {
+            int dow0 = date.getDayOfWeek().ordinal();
+            int doy0 = date.getDayOfYear() - 1;
+            int doyThu0 = doy0 + (3 - dow0); // adjust to mid-week Thursday (which is 3 indexed from zero)
+            int alignedWeek = doyThu0 / 7;
+            int firstThuDoy0 = doyThu0 - (alignedWeek * 7);
+            int firstMonDoy0 = firstThuDoy0 - 3;
+            if (firstMonDoy0 < -3) {
+                firstMonDoy0 += 7;
+            }
+            if (doy0 < firstMonDoy0) {
+                return (int) getWeekRange(date.withDayOfYear(180).minusYears(1)).getMaximum();
+            }
+            int week = ((doy0 - firstMonDoy0) / 7) + 1;
+            if (week == 53) {
+                if ((firstMonDoy0 == -3 || (firstMonDoy0 == -2 && date.isLeapYear())) == false) {
+                    week = 1;
+                }
+            }
+            return week;
+        }
 
-      return "WeekBasedYears";
-    }
+        private static int getWeekBasedYear(LocalDate date) {
 
-    @Override
-    public Duration getDuration() {
-
-      return YEARS.getDuration();
-    }
-
-    @Override
-    public boolean isDurationEstimated() {
-
-      return true;
-    }
-
-    @Override
-    public boolean isSupported(DateTime dateTime) {
-
-      return dateTime.isSupported(EPOCH_DAY);
-    }
-
-    @Override
-    public <R extends DateTime> R doPlus(R dateTime, long periodToAdd) {
-
-      return (R) dateTime.with(WEEK_BASED_YEAR, Jdk8Methods.safeAdd(dateTime.get(WEEK_BASED_YEAR), periodToAdd));
-    }
-
-    @Override
-    public <R extends DateTime> PeriodBetween between(R dateTime1, R dateTime2) {
-
-      long period = Jdk8Methods.safeSubtract(dateTime2.getLong(WEEK_BASED_YEAR), dateTime1.getLong(WEEK_BASED_YEAR));
-      return new Between(period, WEEK_BASED_YEARS);
-    }
-  }
-
-  // -----------------------------------------------------------------------
-  /**
-   * Implementation of {@code PeriodBetween}.
-   */
-  private static final class Between implements PeriodBetween {
-
-    private final long amount;
-
-    private final PeriodUnit unit;
-
-    Between(long amount, PeriodUnit unit) {
-
-      this.amount = amount;
-      this.unit = unit;
+            int year = date.getYear();
+            int doy = date.getDayOfYear();
+            if (doy <= 3) {
+                int dow = date.getDayOfWeek().ordinal();
+                if (doy - dow < -2) {
+                    year--;
+                }
+            } else if (doy >= 363) {
+                int dow = date.getDayOfWeek().ordinal();
+                doy = doy - 363 - (date.isLeapYear() ? 1 : 0);
+                if (doy - dow >= 0) {
+                    year++;
+                }
+            }
+            return year;
+        }
     }
 
-    @Override
-    public long getAmount() {
+    // -----------------------------------------------------------------------
 
-      return this.amount;
+    /**
+     * Implementation of the period unit.
+     */
+    private static enum Unit implements PeriodUnit {
+        WEEK_BASED_YEARS;
+
+        @Override
+        public String getName() {
+
+            return "WeekBasedYears";
+        }
+
+        @Override
+        public Duration getDuration() {
+
+            return YEARS.getDuration();
+        }
+
+        @Override
+        public boolean isDurationEstimated() {
+
+            return true;
+        }
+
+        @Override
+        public boolean isSupported(DateTime dateTime) {
+
+            return dateTime.isSupported(EPOCH_DAY);
+        }
+
+        @Override
+        public <R extends DateTime> R doPlus(R dateTime, long periodToAdd) {
+
+            return (R) dateTime.with(WEEK_BASED_YEAR, Jdk8Methods.safeAdd(dateTime.get(WEEK_BASED_YEAR), periodToAdd));
+        }
+
+        @Override
+        public <R extends DateTime> PeriodBetween between(R dateTime1, R dateTime2) {
+
+            long period = Jdk8Methods.safeSubtract(dateTime2.getLong(WEEK_BASED_YEAR), dateTime1.getLong(WEEK_BASED_YEAR));
+            return new Between(period, WEEK_BASED_YEARS);
+        }
     }
 
-    @Override
-    public PeriodUnit getUnit() {
+    // -----------------------------------------------------------------------
 
-      return this.unit;
+    /**
+     * Implementation of {@code PeriodBetween}.
+     */
+    private static final class Between implements PeriodBetween {
+
+        private final long amount;
+
+        private final PeriodUnit unit;
+
+        Between(long amount, PeriodUnit unit) {
+
+            this.amount = amount;
+            this.unit = unit;
+        }
+
+        @Override
+        public long getAmount() {
+
+            return this.amount;
+        }
+
+        @Override
+        public PeriodUnit getUnit() {
+
+            return this.unit;
+        }
+
+        @Override
+        public DateTime doPlusAdjustment(DateTime dateTime) {
+
+            return dateTime.plus(this.amount, this.unit);
+        }
+
+        @Override
+        public DateTime doMinusAdjustment(DateTime dateTime) {
+
+            return dateTime.minus(this.amount, this.unit);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+
+            if (obj instanceof Between) {
+                Between other = (Between) obj;
+                return this.amount == other.amount && this.unit.equals(other.unit);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+
+            return ((int) (this.amount ^ (this.amount >>> 32))) ^ this.unit.hashCode();
+        }
+
+        ;
+
+        @Override
+        public String toString() {
+
+            return this.amount + " " + this.unit;
+        }
     }
-
-    @Override
-    public DateTime doPlusAdjustment(DateTime dateTime) {
-
-      return dateTime.plus(this.amount, this.unit);
-    }
-
-    @Override
-    public DateTime doMinusAdjustment(DateTime dateTime) {
-
-      return dateTime.minus(this.amount, this.unit);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-
-      if (obj instanceof Between) {
-        Between other = (Between) obj;
-        return this.amount == other.amount && this.unit.equals(other.unit);
-      }
-      return false;
-    }
-
-    @Override
-    public int hashCode() {
-
-      return ((int) (this.amount ^ (this.amount >>> 32))) ^ this.unit.hashCode();
-    };
-
-    @Override
-    public String toString() {
-
-      return this.amount + " " + this.unit;
-    }
-  }
 
 }

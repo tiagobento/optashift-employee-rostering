@@ -1,8 +1,5 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.popups;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Timer;
@@ -16,6 +13,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import org.gwtbootstrap3.client.ui.html.Span;
 import org.optaplanner.openshift.employeerostering.gwtui.client.resources.css.CssResources;
 import org.optaplanner.openshift.employeerostering.gwtui.client.resources.images.ImageResources;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class ErrorPopup extends PopupPanel {
 
@@ -38,9 +38,7 @@ public class ErrorPopup extends PopupPanel {
 
         ScrollPanel scrollPanel = new ScrollPanel();
         scrollPanel.setHeight(image.getHeight() + "px");
-        Span content = new Span(new SafeHtmlBuilder()
-                .appendEscapedLines(msg)
-                .toSafeHtml().asString());
+        Span content = new Span(new SafeHtmlBuilder().appendEscapedLines(msg).toSafeHtml().asString());
 
         scrollPanel.add(content);
         scrollPanel.setWidth(Window.getClientWidth() / 2 + "px");

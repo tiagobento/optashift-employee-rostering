@@ -16,20 +16,20 @@
 
 package org.optaplanner.openshift.employeerostering.server.solver;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.enterprise.concurrent.ManagedExecutorService;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
 import org.optaplanner.openshift.employeerostering.shared.roster.Roster;
 import org.optaplanner.openshift.employeerostering.shared.roster.RosterRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 // TODO Replace by real SolverManager once it exists in optaplanner-core
 @ApplicationScoped
@@ -53,25 +53,23 @@ public class WannabeSolverManager {
         solverFactory = SolverFactory.createFromXmlResource(
                 "org/optaplanner/openshift/employeerostering/server/solver/employeeRosteringSolverConfig.xml");
     }
-    
+
     public void terminate(Integer tenantId) {
         Solver<Roster> solver = tenantIdToSolverMap.get(tenantId);
         if (null != solver) {
             solver.terminateEarly();
-        }
-        else {
-            throw new IllegalStateException("The roster with tenantId (" + tenantId
-                    + ") is not being solved currently.");
+        } else {
+            throw new IllegalStateException("The roster with tenantId (" + tenantId + ") is not being solved currently.");
         }
     }
-    
+
     public void solve(Integer tenantId) {
         logger.info("Scheduling solver for tenantId ({})...", tenantId);
         // No 2 solve() calls of the same dataset in parallel
         tenantIdToSolverStateMap.compute(tenantId, (k, solverStatus) -> {
             if (solverStatus != null && solverStatus != SolverStatus.TERMINATED) {
-                throw new IllegalStateException("The roster with tenantId (" + tenantId
-                        + ") is already solving with solverStatus (" + solverStatus + ").");
+                throw new IllegalStateException(
+                        "The roster with tenantId (" + tenantId + ") is already solving with solverStatus (" + solverStatus + ").");
             }
             return SolverStatus.SCHEDULED;
         });

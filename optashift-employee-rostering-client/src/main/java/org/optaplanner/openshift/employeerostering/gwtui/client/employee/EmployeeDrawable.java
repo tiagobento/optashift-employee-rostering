@@ -1,13 +1,9 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.employee;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 import elemental2.dom.CanvasRenderingContext2D;
 import elemental2.dom.MouseEvent;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.AbstractDrawable;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.TimeRowDrawable;
-import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.twodayview.TwoDayView;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.twodayview.TwoDayViewPresenter;
 import org.optaplanner.openshift.employeerostering.gwtui.client.canvas.CanvasUtils;
 import org.optaplanner.openshift.employeerostering.gwtui.client.canvas.ColorUtils;
@@ -15,8 +11,10 @@ import org.optaplanner.openshift.employeerostering.gwtui.client.common.CommonUti
 import org.optaplanner.openshift.employeerostering.gwtui.client.css.CssParser;
 import org.optaplanner.openshift.employeerostering.gwtui.client.resources.css.CssResources;
 
-public class EmployeeDrawable<I extends EmployeeData> extends AbstractDrawable implements TimeRowDrawable<EmployeeId,
-        I> {
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
+public class EmployeeDrawable<I extends EmployeeData> extends AbstractDrawable implements TimeRowDrawable<EmployeeId, I> {
 
     TwoDayViewPresenter<EmployeeId, ?, ?> view;
     EmployeeData data;
@@ -40,8 +38,7 @@ public class EmployeeDrawable<I extends EmployeeData> extends AbstractDrawable i
     @Override
     public double getLocalY() {
         Integer cursorIndex = view.getCursorIndex(getGroupId());
-        return (null != cursorIndex && cursorIndex > index) ? index * view.getGroupHeight() : (index + 1) * view
-                .getGroupHeight();
+        return (null != cursorIndex && cursorIndex > index) ? index * view.getGroupHeight() : (index + 1) * view.getGroupHeight();
     }
 
     @Override
@@ -65,8 +62,7 @@ public class EmployeeDrawable<I extends EmployeeData> extends AbstractDrawable i
         }
         String pad = (data.isLocked()) ? "BB" : "";
 
-        int fontSize = CanvasUtils.fitTextToBox(g, spot + pad, duration * view.getWidthPerMinute() * 0.75, view
-                .getGroupHeight() * 0.75);
+        int fontSize = CanvasUtils.fitTextToBox(g, spot + pad, duration * view.getWidthPerMinute() * 0.75, view.getGroupHeight() * 0.75);
         g.font = CanvasUtils.getFont(fontSize);
         double[] textSize = CanvasUtils.getPreferredBoxSizeForText(g, spot, fontSize);
 
@@ -74,10 +70,8 @@ public class EmployeeDrawable<I extends EmployeeData> extends AbstractDrawable i
                 y + (view.getGroupHeight() + textSize[1] * 0.375) * 0.5);
 
         if (data.isLocked()) {
-            CanvasUtils.drawGlyph(g, CanvasUtils.Glyphs.LOCK, fontSize, x +
-                    (duration * view.getWidthPerMinute() + textSize[0]) * 0.5, y + (view.getGroupHeight() + textSize[1]
-                            * 0.375)
-                            * 0.5);
+            CanvasUtils.drawGlyph(g, CanvasUtils.Glyphs.LOCK, fontSize, x + (duration * view.getWidthPerMinute() + textSize[0]) * 0.5,
+                    y + (view.getGroupHeight() + textSize[1] * 0.375) * 0.5);
         }
     }
 
@@ -168,27 +162,22 @@ public class EmployeeDrawable<I extends EmployeeData> extends AbstractDrawable i
     private String getFillColor() {
         if (null == data.getAvailability()) {
             return CssParser.getCssProperty(CssResources.INSTANCE.calendar(),
-                    CssResources.INSTANCE.calendar().employeeShiftViewIndifferent(),
-                    "background-color");
+                    CssResources.INSTANCE.calendar().employeeShiftViewIndifferent(), "background-color");
         }
 
         switch (data.getAvailability().getState()) {
-            case UNDESIRED:
-                return CssParser.getCssProperty(CssResources.INSTANCE.calendar(),
-                        CssResources.INSTANCE.calendar().employeeShiftViewUndesired(),
-                        "background-color");
-            case DESIRED:
-                return CssParser.getCssProperty(CssResources.INSTANCE.calendar(),
-                        CssResources.INSTANCE.calendar().employeeShiftViewDesired(),
-                        "background-color");
-            case UNAVAILABLE:
-                return CssParser.getCssProperty(CssResources.INSTANCE.calendar(),
-                        CssResources.INSTANCE.calendar().employeeShiftViewUnavailable(),
-                        "background-color");
-            default:
-                return CssParser.getCssProperty(CssResources.INSTANCE.calendar(),
-                        CssResources.INSTANCE.calendar().employeeShiftViewIndifferent(),
-                        "background-color");
+        case UNDESIRED:
+            return CssParser.getCssProperty(CssResources.INSTANCE.calendar(), CssResources.INSTANCE.calendar().employeeShiftViewUndesired(),
+                    "background-color");
+        case DESIRED:
+            return CssParser.getCssProperty(CssResources.INSTANCE.calendar(), CssResources.INSTANCE.calendar().employeeShiftViewDesired(),
+                    "background-color");
+        case UNAVAILABLE:
+            return CssParser.getCssProperty(CssResources.INSTANCE.calendar(),
+                    CssResources.INSTANCE.calendar().employeeShiftViewUnavailable(), "background-color");
+        default:
+            return CssParser.getCssProperty(CssResources.INSTANCE.calendar(),
+                    CssResources.INSTANCE.calendar().employeeShiftViewIndifferent(), "background-color");
         }
     }
 

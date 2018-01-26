@@ -1,19 +1,6 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.calendar;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import elemental2.dom.MouseEvent;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
@@ -23,7 +10,14 @@ import org.optaplanner.openshift.employeerostering.gwtui.client.common.ConstantF
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.DataProvider;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.Fetchable;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.HasTimeslot;
-import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Calendar<G extends HasTitle, I extends HasTimeslot<G>> {
 
@@ -37,9 +31,11 @@ public class Calendar<G extends HasTitle, I extends HasTimeslot<G>> {
     Timer timer;
     boolean didTenantChange;
 
-    private Calendar(Integer tenantId, Fetchable<Collection<I>> dataProvider, Fetchable<List<G>> groupProvider,
-            DataProvider<G,
-                    I> instanceCreator, SyncBeanManager beanManager) {
+    private Calendar(Integer tenantId,
+            Fetchable<Collection<I>> dataProvider,
+            Fetchable<List<G>> groupProvider,
+            DataProvider<G, I> instanceCreator,
+            SyncBeanManager beanManager) {
         this.beanManager = beanManager;
         this.tenantId = tenantId;
 
@@ -293,11 +289,8 @@ public class Calendar<G extends HasTitle, I extends HasTimeslot<G>> {
 
         public Calendar<G, T> asTwoDayView(TimeRowDrawableProvider<G, T, D> drawableProvider) {
             if (null != beanManager) {
-                Calendar<G, T> calendar = new Calendar<>(tenantId,
-                        dataProvider,
-                        groupProvider, instanceCreator, beanManager);
-                TwoDayViewPresenter<G, T, D> view = new TwoDayViewPresenter<G, T, D>(calendar,
-                        drawableProvider, dateDisplay, translator);
+                Calendar<G, T> calendar = new Calendar<>(tenantId, dataProvider, groupProvider, instanceCreator, beanManager);
+                TwoDayViewPresenter<G, T, D> view = new TwoDayViewPresenter<G, T, D>(calendar, drawableProvider, dateDisplay, translator);
                 calendar.setView(view);
 
                 if (null != startAt) {
@@ -309,8 +302,7 @@ public class Calendar<G extends HasTitle, I extends HasTimeslot<G>> {
                 calendar.setViewSize(container.getOffsetWidth(), container.getOffsetHeight());
                 return calendar;
             } else {
-                throw new IllegalStateException("You must set all of "
-                        + "(beanManager) before calling this method.");
+                throw new IllegalStateException("You must set all of " + "(beanManager) before calling this method.");
             }
         }
 

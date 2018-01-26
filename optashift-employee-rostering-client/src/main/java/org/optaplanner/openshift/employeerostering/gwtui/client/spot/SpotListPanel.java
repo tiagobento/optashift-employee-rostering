@@ -1,13 +1,5 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.spot;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SimplePager;
@@ -36,6 +28,13 @@ import org.optaplanner.openshift.employeerostering.shared.skill.SkillRestService
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
 import org.optaplanner.openshift.employeerostering.shared.spot.SpotRestServiceBuilder;
 import org.optaplanner.openshift.employeerostering.shared.tenant.Tenant;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.optaplanner.openshift.employeerostering.gwtui.client.resources.i18n.OptaShiftUIConstants.General_actions;
 import static org.optaplanner.openshift.employeerostering.gwtui.client.resources.i18n.OptaShiftUIConstants.General_delete;
@@ -137,8 +136,7 @@ public class SpotListPanel implements IsElement {
             public String getValue(Spot spot) {
                 return spot.getName();
             }
-        },
-                CONSTANTS.format(General_name));
+        }, CONSTANTS.format(General_name));
         table.addColumn(new TextColumn<Spot>() {
 
             @Override
@@ -147,13 +145,12 @@ public class SpotListPanel implements IsElement {
                 if (requiredSkillSet == null) {
                     return "";
                 }
-                return requiredSkillSet.stream().reduce("", (a, s) -> (a.isEmpty()) ? s.getName() : a + "," + s
-                        .getName(),
-                        (a, s) -> (a.isEmpty()) ? s : a + "," + s);
+                return requiredSkillSet.stream()
+                        .reduce("", (a, s) -> (a.isEmpty()) ? s.getName() : a + "," + s.getName(),
+                                (a, s) -> (a.isEmpty()) ? s : a + "," + s);
             }
         }, "Required skill");
-        Column<Spot, String> deleteColumn = new Column<Spot, String>(new ButtonCell(IconType.REMOVE, ButtonType.DANGER,
-                ButtonSize.SMALL)) {
+        Column<Spot, String> deleteColumn = new Column<Spot, String>(new ButtonCell(IconType.REMOVE, ButtonType.DANGER, ButtonSize.SMALL)) {
 
             @Override
             public String getValue(Spot spot) {
@@ -169,8 +166,7 @@ public class SpotListPanel implements IsElement {
                 }
             });
         });
-        Column<Spot, String> editColumn = new Column<Spot, String>(new ButtonCell(IconType.EDIT, ButtonType.DEFAULT,
-                ButtonSize.SMALL)) {
+        Column<Spot, String> editColumn = new Column<Spot, String>(new ButtonCell(IconType.EDIT, ButtonType.DEFAULT, ButtonSize.SMALL)) {
 
             @Override
             public String getValue(Spot spot) {
@@ -222,14 +218,13 @@ public class SpotListPanel implements IsElement {
         spotNameTextBox.setFocus(true);
         Set<Skill> skillSet = new HashSet<>(requiredSkillsTagsInput.getItems());
 
-        SpotRestServiceBuilder.addSpot(tenantId, new Spot(tenantId, spotName, skillSet),
-                new FailureShownRestCallback<Spot>() {
+        SpotRestServiceBuilder.addSpot(tenantId, new Spot(tenantId, spotName, skillSet), new FailureShownRestCallback<Spot>() {
 
-                    @Override
-                    public void onSuccess(Spot spot) {
-                        refreshTable();
-                    }
-                });
+            @Override
+            public void onSuccess(Spot spot) {
+                refreshTable();
+            }
+        });
     }
 
 }

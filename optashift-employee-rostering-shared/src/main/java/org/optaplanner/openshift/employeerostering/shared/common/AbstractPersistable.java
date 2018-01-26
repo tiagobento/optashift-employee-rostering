@@ -16,7 +16,7 @@
 
 package org.optaplanner.openshift.employeerostering.shared.common;
 
-import java.io.Serializable;
+import org.optaplanner.core.api.domain.lookup.PlanningId;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,8 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
-
-import org.optaplanner.core.api.domain.lookup.PlanningId;
+import java.io.Serializable;
 
 @MappedSuperclass
 public abstract class AbstractPersistable implements Serializable {
@@ -98,6 +97,7 @@ public abstract class AbstractPersistable implements Serializable {
 
     /**
      * Should
+     *
      * @param id no
      */
     public void setId(Long id) {

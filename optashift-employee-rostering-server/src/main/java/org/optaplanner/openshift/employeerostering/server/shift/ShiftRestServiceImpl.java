@@ -16,22 +16,6 @@
 
 package org.optaplanner.openshift.employeerostering.server.shift;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-
 import org.optaplanner.openshift.employeerostering.server.common.AbstractRestServiceImpl;
 import org.optaplanner.openshift.employeerostering.server.lang.parser.ShiftFileParser;
 import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
@@ -41,7 +25,6 @@ import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeRestS
 import org.optaplanner.openshift.employeerostering.shared.lang.parser.ParserException;
 import org.optaplanner.openshift.employeerostering.shared.lang.tokens.BaseDateDefinitions;
 import org.optaplanner.openshift.employeerostering.shared.lang.tokens.EnumOrCustom;
-import org.optaplanner.openshift.employeerostering.shared.lang.tokens.RepeatMode;
 import org.optaplanner.openshift.employeerostering.shared.lang.tokens.ShiftInfo;
 import org.optaplanner.openshift.employeerostering.shared.lang.tokens.ShiftTemplate;
 import org.optaplanner.openshift.employeerostering.shared.shift.Shift;
@@ -53,11 +36,26 @@ import org.optaplanner.openshift.employeerostering.shared.tenant.Tenant;
 import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlot;
 import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlotState;
 
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class ShiftRestServiceImpl extends AbstractRestServiceImpl implements ShiftRestService {
 
     @PersistenceContext
     private EntityManager entityManager;
-    
+
     @Inject
     private SpotRestService spotRestService;
 
@@ -99,8 +97,7 @@ public class ShiftRestServiceImpl extends AbstractRestServiceImpl implements Shi
         if (employeeId != null) {
             Employee employee = entityManager.find(Employee.class, employeeId);
             if (employee == null) {
-                throw new IllegalArgumentException("ShiftView (" + shiftView
-                        + ") has an non-existing employeeId (" + employeeId + ").");
+                throw new IllegalArgumentException("ShiftView (" + shiftView + ") has an non-existing employeeId (" + employeeId + ").");
             }
             validateTenantIdParameter(tenantId, employee);
             shift.setEmployee(employee);
@@ -122,8 +119,7 @@ public class ShiftRestServiceImpl extends AbstractRestServiceImpl implements Shi
 
     @Override
     @Transactional
-    public List<Long> addShiftsFromTemplate(Integer tenantId,
-            String startDateString, String endDateString) throws Exception {
+    public List<Long> addShiftsFromTemplate(Integer tenantId, String startDateString, String endDateString) throws Exception {
         ShiftTemplate template = getTemplate(tenantId);
 
         if (null == template) {
@@ -136,19 +132,12 @@ public class ShiftRestServiceImpl extends AbstractRestServiceImpl implements Shi
         Map<Long, List<Spot>> spotGroupMap = new HashMap<>();
         Map<Long, List<Employee>> employeeGroupMap = new HashMap<>();
         spotRestService.getSpotGroups(tenantId).forEach((g) -> spotGroupMap.put(g.getId(), g.getSpots()));
-        employeeRestService.getEmployeeGroups(tenantId).forEach((g) -> employeeGroupMap.put(g.getId(), g
-                .getEmployees()));
+        employeeRestService.getEmployeeGroups(tenantId).forEach((g) -> employeeGroupMap.put(g.getId(), g.getEmployees()));
         employeeGroupMap.put(EmployeeGroup.ALL_GROUP_ID, employeeRestService.getEmployeeList(tenantId));
 
         try {
-            ShiftFileParser.ParserOut parserOutput = ShiftFileParser.parse(tenantId,
-                    spotRestService.getSpotList(tenantId),
-                    employeeRestService.getEmployeeList(tenantId),
-                    spotGroupMap,
-                    employeeGroupMap,
-                    startDate,
-                    endDate,
-                    template);
+            ShiftFileParser.ParserOut parserOutput = ShiftFileParser.parse(tenantId, spotRestService.getSpotList(tenantId),
+                    employeeRestService.getEmployeeList(tenantId), spotGroupMap, employeeGroupMap, startDate, endDate, template);
             List<Shift> shifts = parserOutput.getShiftOutputList();
 
             List<EmployeeAvailability> employeeAvailabilities = parserOutput.getEmployeeAvailabilityOutputList();
@@ -203,8 +192,7 @@ public class ShiftRestServiceImpl extends AbstractRestServiceImpl implements Shi
         if (result.isEmpty()) {
             return null;
         } else if (1 != result.size()) {
-            throw new IllegalStateException("Each tenant can only have 1 template! Found " + result.size()
-                    + "templates!");
+            throw new IllegalStateException("Each tenant can only have 1 template! Found " + result.size() + "templates!");
         } else {
             return result.get(0);
         }
@@ -219,8 +207,7 @@ public class ShiftRestServiceImpl extends AbstractRestServiceImpl implements Shi
         }
         ShiftTemplate old = getTemplate(tenantId);
         ShiftTemplate template = (null != old) ? old : new ShiftTemplate();
-        template.setBaseDateType(new EnumOrCustom(tenantId, false, BaseDateDefinitions.WEEK_AFTER_START_DATE
-                .toString()));
+        template.setBaseDateType(new EnumOrCustom(tenantId, false, BaseDateDefinitions.WEEK_AFTER_START_DATE.toString()));
         long weeksInShifts = tenant.getConfiguration().getTemplateDuration();
         template.setRepeatType(new EnumOrCustom(tenantId, true, "0:" + weeksInShifts + ":0:0"));
         template.setUniversalExceptionList(Collections.emptyList());

@@ -1,14 +1,14 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.calendar;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.HasTimeslot;
 import org.optaplanner.openshift.employeerostering.gwtui.client.spot.SpotData;
 import org.optaplanner.openshift.employeerostering.gwtui.client.spot.SpotId;
 import org.optaplanner.openshift.employeerostering.shared.lang.tokens.IdOrGroup;
 import org.optaplanner.openshift.employeerostering.shared.lang.tokens.ShiftInfo;
 import org.optaplanner.openshift.employeerostering.shared.shift.Shift;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
 
 public class ShiftData extends ShiftInfo implements HasTimeslot<SpotId> {
 

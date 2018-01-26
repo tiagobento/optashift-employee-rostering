@@ -17,7 +17,5 @@
 package org.optaplanner.openshift.employeerostering.shared.employee;
 
 public enum EmployeeAvailabilityState {
-    UNAVAILABLE,
-    UNDESIRED,
-    DESIRED
+    UNAVAILABLE, UNDESIRED, DESIRED
 }

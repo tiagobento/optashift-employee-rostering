@@ -32,7 +32,7 @@ public interface DatePredicate {
 
     /**
      * Creates a {@link DatePredicate} from a DatePredicate Expression as described in  {@link DatePredicate}
-     * 
+     *
      * @param subexpr The DatePredicate expression to create the {@link DatePredicate} from
      * @return The {@link DatePredicate} which tests the DatePredicate Expression
      * @throws ParserException If subexpr is not a valid DatePredicate Expression
@@ -47,67 +47,68 @@ public interface DatePredicate {
         DatePredicate out;
 
         switch (subexpr.charAt(0)) {
-            //Match exact date (day/month)
-            case 'E':
-                dateParts = predicate.split("/");
-                if (2 != dateParts.length) {
-                    throw new ParserException("Badly formatted date");
-                }
-                dayOfMonth = Integer.parseInt(dateParts[0]);
-                month = Integer.parseInt(dateParts[1]);
-                return (d) -> d.getDayOfMonth() == dayOfMonth && d.getMonthValue() == month;
+        //Match exact date (day/month)
+        case 'E':
+            dateParts = predicate.split("/");
+            if (2 != dateParts.length) {
+                throw new ParserException("Badly formatted date");
+            }
+            dayOfMonth = Integer.parseInt(dateParts[0]);
+            month = Integer.parseInt(dateParts[1]);
+            return (d) -> d.getDayOfMonth() == dayOfMonth && d.getMonthValue() == month;
 
-            //Match before (n+1)th dayOfWeek of month (dayOfWeek:n) 
-            case 'W':
-                dateParts = predicate.split(":");
-                if (2 != dateParts.length) {
-                    throw new ParserException("Badly formatted date");
-                }
-                DayOfWeek base = DayOfWeek.valueOf(dateParts[0]);
-                week = Integer.parseInt(dateParts[1]);
+        //Match before (n+1)th dayOfWeek of month (dayOfWeek:n)
+        case 'W':
+            dateParts = predicate.split(":");
+            if (2 != dateParts.length) {
+                throw new ParserException("Badly formatted date");
+            }
+            DayOfWeek base = DayOfWeek.valueOf(dateParts[0]);
+            week = Integer.parseInt(dateParts[1]);
 
-                return (d) -> {
-                    int mdayOfMonth = d.getDayOfMonth();
-                    LocalDateTime firstDayOfMonth = d.minusDays(mdayOfMonth - 1);
-                    int offset = Math.abs((firstDayOfMonth.getDayOfWeek().getValue() - base.getValue() - 2) % 7);
-                    return ((mdayOfMonth + offset) / 7) == week - 1;
-                };
+            return (d) -> {
+                int mdayOfMonth = d.getDayOfMonth();
+                LocalDateTime firstDayOfMonth = d.minusDays(mdayOfMonth - 1);
+                int offset = Math.abs((firstDayOfMonth.getDayOfWeek().getValue() - base.getValue() - 2) % 7);
+                return ((mdayOfMonth + offset) / 7) == week - 1;
+            };
 
-            //Match day = dayOfWeek
-            case 'D':
-                dayOfWeek = DayOfWeek.valueOf(predicate);
-                return (d) -> dayOfWeek.equals(d.getDayOfWeek());
+        //Match day = dayOfWeek
+        case 'D':
+            dayOfWeek = DayOfWeek.valueOf(predicate);
+            return (d) -> dayOfWeek.equals(d.getDayOfWeek());
 
-            //Match day = dayOfMonth
-            case 'd':
-                dayOfMonth = Integer.parseInt(predicate);
-                return (d) -> dayOfMonth == d.getDayOfMonth();
+        //Match day = dayOfMonth
+        case 'd':
+            dayOfMonth = Integer.parseInt(predicate);
+            return (d) -> dayOfMonth == d.getDayOfMonth();
 
-            //Match date.month = month
-            case 'm':
-                month = Integer.parseInt(predicate);
-                return (d) -> month == d.getMonthValue();
+        //Match date.month = month
+        case 'm':
+            month = Integer.parseInt(predicate);
+            return (d) -> month == d.getMonthValue();
 
-            //Logical disjunct of several DatePredicate
-            case 'M':
-                dateParts = predicate.split("\\|");
-                out = (d) -> false;//Identity for OR is false
-                for (String disjunct : dateParts) {
-                    DatePredicate disjunctPredicate = parse(disjunct);
-                    DatePredicate clone = out;
-                    out = (d) -> clone.test(d) || disjunctPredicate.test(d);
-                }
-                return out;
-
-            //Negation
-            case '!':
-                out = parse(predicate); {
+        //Logical disjunct of several DatePredicate
+        case 'M':
+            dateParts = predicate.split("\\|");
+            out = (d) -> false;//Identity for OR is false
+            for (String disjunct : dateParts) {
+                DatePredicate disjunctPredicate = parse(disjunct);
                 DatePredicate clone = out;
-                return (d) -> !clone.test(d);
-            } //To hide scope, since cases don't, which is VERY ANNOYING
+                out = (d) -> clone.test(d) || disjunctPredicate.test(d);
+            }
+            return out;
 
-            default:
-                throw new ParserException("Badly formated predicate");
+        //Negation
+        case '!':
+            out = parse(predicate);
+        {
+            DatePredicate clone = out;
+            return (d) -> !clone.test(d);
+        } //To hide scope, since cases don't, which is VERY ANNOYING
+
+        default:
+            throw new ParserException("Badly formated predicate");
         }
     }
 }

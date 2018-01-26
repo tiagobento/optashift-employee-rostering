@@ -16,33 +16,28 @@
 
 package org.optaplanner.openshift.employeerostering.shared.timeslot;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+import org.optaplanner.openshift.employeerostering.shared.jackson.LocalDateTimeDeserializer;
+import org.optaplanner.openshift.employeerostering.shared.jackson.LocalDateTimeSerializer;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import org.optaplanner.openshift.employeerostering.shared.jackson.LocalDateTimeSerializer;
-import org.optaplanner.openshift.employeerostering.shared.jackson.LocalDateTimeDeserializer;
-import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+import java.time.LocalDateTime;
 
 @Entity
-@NamedQueries({
-        @NamedQuery(name = "TimeSlot.findAll",
-                query = "select t from TimeSlot t" +
-                        " where t.tenantId = :tenantId" +
-                        " order by t.startDateTime"),
-//        @NamedQuery(name = "TimeSlot.findByStartDateEndDate",
-//                query = "select t from TimeSlot t" +
-//                        " where t.tenantId = :tenantId" +
-//                        " and t.startDateTime between :startDate and :endDate"
-//                        " order by t.startDateTime"),
-})
+@NamedQueries({ @NamedQuery(name = "TimeSlot.findAll",
+                            query = "select t from TimeSlot t" + " where t.tenantId = :tenantId" + " order by t.startDateTime"),
+                //        @NamedQuery(name = "TimeSlot.findByStartDateEndDate",
+                //                query = "select t from TimeSlot t" +
+                //                        " where t.tenantId = :tenantId" +
+                //                        " and t.startDateTime between :startDate and :endDate"
+                //                        " order by t.startDateTime"),
+              })
 public class TimeSlot extends AbstractPersistable {
 
     @NotNull

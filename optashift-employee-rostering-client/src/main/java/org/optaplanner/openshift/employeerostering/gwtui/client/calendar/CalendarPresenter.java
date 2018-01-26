@@ -1,13 +1,13 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.calendar;
 
+import elemental2.dom.MouseEvent;
+import org.jboss.errai.ui.client.local.api.IsElement;
+import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.HasTimeslot;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-
-import elemental2.dom.MouseEvent;
-import org.jboss.errai.ui.client.local.api.IsElement;
-import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.HasTimeslot;
 
 public interface CalendarPresenter<G extends HasTitle, I extends HasTimeslot<G>> extends IsElement {
 

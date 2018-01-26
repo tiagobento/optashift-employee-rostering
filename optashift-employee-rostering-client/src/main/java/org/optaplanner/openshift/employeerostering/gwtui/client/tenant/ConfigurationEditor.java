@@ -1,15 +1,14 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.tenant;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-
-import com.google.gwt.dom.client.Node;
 import org.jboss.errai.common.client.dom.Div;
 import org.jboss.errai.ui.client.local.api.IsElement;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.optaplanner.openshift.employeerostering.shared.tenant.Tenant;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 
 @Templated
 public class ConfigurationEditor implements IsElement {
@@ -50,23 +49,22 @@ public class ConfigurationEditor implements IsElement {
 
     public void switchView(Views view) {
         switch (view) {
-            case TEMPLATE_EDITOR:
-                content.removeChild(content.getLastChild());
-                content.appendChild(templateEditor.getElement());
-                break;
-            case TENANT_CONFIGURATION_EDITOR:
-                content.removeChild(content.getLastChild());
-                content.appendChild(tenantConfigurationEditor.getElement());
-                break;
-            default:
-                break;
+        case TEMPLATE_EDITOR:
+            content.removeChild(content.getLastChild());
+            content.appendChild(templateEditor.getElement());
+            break;
+        case TENANT_CONFIGURATION_EDITOR:
+            content.removeChild(content.getLastChild());
+            content.appendChild(tenantConfigurationEditor.getElement());
+            break;
+        default:
+            break;
 
         }
     }
 
     protected static enum Views {
-        TEMPLATE_EDITOR,
-        TENANT_CONFIGURATION_EDITOR;
+        TEMPLATE_EDITOR, TENANT_CONFIGURATION_EDITOR;
     }
 
 }

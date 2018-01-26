@@ -1,8 +1,5 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.spot;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 import elemental2.dom.CanvasRenderingContext2D;
 import elemental2.dom.MouseEvent;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.AbstractDrawable;
@@ -12,8 +9,10 @@ import org.optaplanner.openshift.employeerostering.gwtui.client.canvas.CanvasUti
 import org.optaplanner.openshift.employeerostering.gwtui.client.canvas.ColorUtils;
 import org.optaplanner.openshift.employeerostering.gwtui.client.common.CommonUtils;
 import org.optaplanner.openshift.employeerostering.gwtui.client.css.CssParser;
-import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
 import org.optaplanner.openshift.employeerostering.gwtui.client.resources.css.CssResources;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 public class SpotDrawable<I extends SpotData> extends AbstractDrawable implements TimeRowDrawable<SpotId, I> {
 
@@ -39,8 +38,7 @@ public class SpotDrawable<I extends SpotData> extends AbstractDrawable implement
     @Override
     public double getLocalY() {
         Integer cursorIndex = view.getCursorIndex(getGroupId());
-        return (null != cursorIndex && cursorIndex > index) ? index * view.getGroupHeight() : (index + 1) * view
-                .getGroupHeight();
+        return (null != cursorIndex && cursorIndex > index) ? index * view.getGroupHeight() : (index + 1) * view.getGroupHeight();
     }
 
     @Override
@@ -65,8 +63,8 @@ public class SpotDrawable<I extends SpotData> extends AbstractDrawable implement
 
         String pad = (data.isLocked()) ? "BB" : "";
 
-        int fontSize = CanvasUtils.fitTextToBox(g, employee + pad, duration * view.getWidthPerMinute() * 0.75, view
-                .getGroupHeight() * 0.75);
+        int fontSize = CanvasUtils.fitTextToBox(g, employee + pad, duration * view.getWidthPerMinute() * 0.75,
+                view.getGroupHeight() * 0.75);
         g.font = CanvasUtils.getFont(fontSize);
         double[] textSize = CanvasUtils.getPreferredBoxSizeForText(g, employee, fontSize);
 
@@ -74,10 +72,8 @@ public class SpotDrawable<I extends SpotData> extends AbstractDrawable implement
                 y + (view.getGroupHeight() + textSize[1] * 0.375) * 0.5);
 
         if (data.isLocked()) {
-            CanvasUtils.drawGlyph(g, CanvasUtils.Glyphs.LOCK, fontSize, x +
-                    (duration * view.getWidthPerMinute() + textSize[0]) * 0.5, y + (view.getGroupHeight() + textSize[1]
-                            * 0.375)
-                            * 0.5);
+            CanvasUtils.drawGlyph(g, CanvasUtils.Glyphs.LOCK, fontSize, x + (duration * view.getWidthPerMinute() + textSize[0]) * 0.5,
+                    y + (view.getGroupHeight() + textSize[1] * 0.375) * 0.5);
         }
     }
 
@@ -164,8 +160,7 @@ public class SpotDrawable<I extends SpotData> extends AbstractDrawable implement
     }
 
     private String getFillColor() {
-        return CssParser.getCssProperty(CssResources.INSTANCE.calendar(),
-                CssResources.INSTANCE.calendar().spotShiftView(),
+        return CssParser.getCssProperty(CssResources.INSTANCE.calendar(), CssResources.INSTANCE.calendar().spotShiftView(),
                 "background-color");
     }
 

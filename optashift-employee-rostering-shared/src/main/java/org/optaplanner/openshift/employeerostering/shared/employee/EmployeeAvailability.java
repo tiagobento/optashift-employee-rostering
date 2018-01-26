@@ -16,6 +16,10 @@
 
 package org.optaplanner.openshift.employeerostering.shared.employee;
 
+import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+import org.optaplanner.openshift.employeerostering.shared.employee.view.EmployeeAvailabilityView;
+import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlot;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -25,19 +29,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
-import org.optaplanner.openshift.employeerostering.shared.employee.view.EmployeeAvailabilityView;
-import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlot;
-
 @Entity
-@NamedQueries({
-        @NamedQuery(name = "EmployeeAvailability.findAll",
-                query = "select distinct ea from EmployeeAvailability ea" +
-                        " left join fetch ea.employee e left join fetch ea.timeSlot t" +
-                        " where e.tenantId = :tenantId" +
-                        " order by e.name, t.startDateTime"),
-})
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId", "employee_id", "timeSlot_id"}))
+@NamedQueries({ @NamedQuery(name = "EmployeeAvailability.findAll",
+                            query = "select distinct ea from EmployeeAvailability ea"
+                                    + " left join fetch ea.employee e left join fetch ea.timeSlot t"
+                                    + " where e.tenantId = :tenantId"
+                                    + " order by e.name, t.startDateTime"), })
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "tenantId", "employee_id", "timeSlot_id" }))
 public class EmployeeAvailability extends AbstractPersistable {
 
     @NotNull

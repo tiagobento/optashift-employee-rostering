@@ -1,23 +1,21 @@
 package org.optaplanner.openshift.employeerostering.shared.roster.view;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import org.optaplanner.openshift.employeerostering.shared.jackson.LocalDateSerializer;
-import org.optaplanner.openshift.employeerostering.shared.jackson.LocalDateDeserializer;
-
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
+import org.optaplanner.openshift.employeerostering.shared.jackson.LocalDateDeserializer;
+import org.optaplanner.openshift.employeerostering.shared.jackson.LocalDateSerializer;
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
 import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlot;
 import org.optaplanner.persistence.jackson.api.score.ScoreJacksonJsonSerializer;
 import org.optaplanner.persistence.jackson.api.score.buildin.hardsoft.HardSoftScoreJacksonJsonDeserializer;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
 
 public class AbstractRosterView implements Serializable {
 

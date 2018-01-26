@@ -16,16 +16,16 @@
 
 package org.optaplanner.openshift.employeerostering.shared.jackson;
 
-import java.io.IOException;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.JsonTokenId;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+
+import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 //TODO: Remove me when our minimum Wildfly version is 10.1.0.Final and
 //the minimum  EAP version is (one which uses Wildfly 10.1.0.Final or higher)
@@ -33,14 +33,13 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 //https://issues.jboss.org/browse/PLANNER-903
 public class LocalDateDeserializer extends JsonDeserializer<LocalDate> {
     @Override
-    public LocalDate deserialize(JsonParser parser, DeserializationContext context) throws IOException
-    {
+    public LocalDate deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         if (parser.hasTokenId(JsonTokenId.ID_STRING)) {
             String string = parser.getText().trim();
             if (string.length() == 0) {
                 return null;
             }
-            
+
             try {
                 return LocalDate.parse(string, DateTimeFormatter.ISO_LOCAL_DATE);
             } catch (DateTimeException e) {

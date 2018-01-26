@@ -3,15 +3,10 @@ package org.optaplanner.openshift.employeerostering.gwtui.client.spot;
 import elemental2.dom.CanvasRenderingContext2D;
 import elemental2.dom.MouseEvent;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.AbstractDrawable;
-import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.Drawable.PostMouseDownEvent;
-import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.HasTitle;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.twodayview.TwoDayViewPresenter;
 import org.optaplanner.openshift.employeerostering.gwtui.client.canvas.CanvasUtils;
 import org.optaplanner.openshift.employeerostering.gwtui.client.canvas.CanvasUtils.Glyphs;
 import org.optaplanner.openshift.employeerostering.gwtui.client.common.FailureShownRestCallback;
-import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.HasTimeslot;
-import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
-import org.optaplanner.openshift.employeerostering.gwtui.client.spot.SpotId;
 import org.optaplanner.openshift.employeerostering.shared.shift.ShiftRestServiceBuilder;
 import org.optaplanner.openshift.employeerostering.shared.shift.view.ShiftView;
 
@@ -26,12 +21,12 @@ public class SpotToolbox extends AbstractDrawable {
     SpotDrawable<SpotData> drawable;
     TwoDayViewPresenter<SpotId, SpotData, SpotDrawable<SpotData>> presenter;
 
-    public SpotToolbox(SpotDrawable<SpotData> parent, TwoDayViewPresenter<SpotId, SpotData, SpotDrawable<
-            SpotData>> view, double x,
+    public SpotToolbox(SpotDrawable<SpotData> parent,
+            TwoDayViewPresenter<SpotId, SpotData, SpotDrawable<SpotData>> view,
+            double x,
             double y) {
         this.x = Math.max(TwoDayViewPresenter.SPOT_NAME_WIDTH, x + view.getLocationOfDate(parent.getStartTime()));
-        this.y = Math.max(TwoDayViewPresenter.HEADER_HEIGHT, y + view.getLocationOfGroupSlot(parent.getGroupId(),
-                parent.getIndex()));
+        this.y = Math.max(TwoDayViewPresenter.HEADER_HEIGHT, y + view.getLocationOfGroupSlot(parent.getGroupId(), parent.getIndex()));
         this.presenter = view;
         this.drawable = parent;
         onRemove = false;
@@ -84,8 +79,8 @@ public class SpotToolbox extends AbstractDrawable {
             return PostMouseDownEvent.IGNORE;
         } else {
             if (localX > 0 && localY > 0 && localX < 40 && localY < 40) {
-                ShiftRestServiceBuilder.removeShift(drawable.getData().getSpot().getTenantId(), drawable.getData()
-                        .getShift().getId(), new FailureShownRestCallback<Boolean>() {
+                ShiftRestServiceBuilder.removeShift(drawable.getData().getSpot().getTenantId(), drawable.getData().getShift().getId(),
+                        new FailureShownRestCallback<Boolean>() {
 
                             @Override
                             public void onSuccess(Boolean removed) {
@@ -99,15 +94,15 @@ public class SpotToolbox extends AbstractDrawable {
                 presenter.setToolBox(null);
                 return PostMouseDownEvent.REMOVE_FOCUS;
             } else if (localX > 0 && localY > 80 && localX < 40 && localY < 120) {
-                ShiftRestServiceBuilder.addShift(drawable.getData().getSpot().getTenantId(), new ShiftView(drawable
-                        .getData().getSpot().getTenantId(), drawable.getData().getSpot(), drawable.getData().getShift()
-                                .getTimeSlot()), new FailureShownRestCallback<Long>() {
+                ShiftRestServiceBuilder.addShift(drawable.getData().getSpot().getTenantId(),
+                        new ShiftView(drawable.getData().getSpot().getTenantId(), drawable.getData().getSpot(),
+                                drawable.getData().getShift().getTimeSlot()), new FailureShownRestCallback<Long>() {
 
-                                    @Override
-                                    public void onSuccess(Long shiftId) {
-                                        presenter.getCalendar().forceUpdate();
-                                    }
-                                });
+                            @Override
+                            public void onSuccess(Long shiftId) {
+                                presenter.getCalendar().forceUpdate();
+                            }
+                        });
                 presenter.setToolBox(null);
                 return PostMouseDownEvent.REMOVE_FOCUS;
             }

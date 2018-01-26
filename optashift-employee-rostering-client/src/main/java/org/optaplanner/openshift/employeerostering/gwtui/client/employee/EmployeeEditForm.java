@@ -1,28 +1,10 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.employee;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Panel;
-import org.gwtbootstrap3.client.ui.CheckBox;
-import org.gwtbootstrap3.client.ui.ListBox;
 import org.gwtbootstrap3.client.ui.TextBox;
-import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
-import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.extras.tagsinput.client.ui.base.SingleValueTagsInput;
 import org.gwtbootstrap3.extras.typeahead.client.base.CollectionDataset;
 import org.gwtbootstrap3.extras.typeahead.client.base.Dataset;
@@ -32,18 +14,20 @@ import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.twodayview.TwoDayView;
 import org.optaplanner.openshift.employeerostering.gwtui.client.common.FailureShownRestCallback;
-import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
 import org.optaplanner.openshift.employeerostering.gwtui.client.popups.FormPopup;
 import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
-import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeAvailabilityState;
-import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeSkillProficiency;
-import org.optaplanner.openshift.employeerostering.shared.employee.view.EmployeeAvailabilityView;
-import org.optaplanner.openshift.employeerostering.shared.shift.view.ShiftView;
-import org.optaplanner.openshift.employeerostering.shared.skill.Skill;
-import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
 import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeRestServiceBuilder;
+import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeSkillProficiency;
+import org.optaplanner.openshift.employeerostering.shared.skill.Skill;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Templated
 public class EmployeeEditForm implements IsElement {
@@ -70,7 +54,8 @@ public class EmployeeEditForm implements IsElement {
 
     @Inject
     @DataField
-    private @Named(value = "h3") HeadingElement title;
+    private @Named(value = "h3")
+    HeadingElement title;
 
     @Inject
     private TranslationService CONSTANTS;
@@ -81,9 +66,10 @@ public class EmployeeEditForm implements IsElement {
 
     private FormPopup popup;
 
-    public static EmployeeEditForm create(SyncBeanManager beanManager, EmployeeListPanel employeePanel,
-            Employee employeeData, List<
-                    Skill> skillData) {
+    public static EmployeeEditForm create(SyncBeanManager beanManager,
+            EmployeeListPanel employeePanel,
+            Employee employeeData,
+            List<Skill> skillData) {
         panel = employeePanel;
         employee = employeeData;
         skills = skillData;
@@ -105,14 +91,10 @@ public class EmployeeEditForm implements IsElement {
         employeeSkills.setItemValue(Skill::getName);
         employeeSkills.setItemText(Skill::getName);
         employeeSkills.reconfigure();
-        employeeSkills.add(employee.getSkillProficiencySet().stream()
-                .map((p) -> p.getSkill())
-                .collect(Collectors.toList()));
-        employee.getSkillProficiencySet().stream().map((p) -> p.getSkill())
-                .forEach((s) -> employeeSkills.add(s));
+        employeeSkills.add(employee.getSkillProficiencySet().stream().map((p) -> p.getSkill()).collect(Collectors.toList()));
+        employee.getSkillProficiencySet().stream().map((p) -> p.getSkill()).forEach((s) -> employeeSkills.add(s));
 
-        title.setInnerSafeHtml(new SafeHtmlBuilder().appendEscaped(employee.getName())
-                .toSafeHtml());
+        title.setInnerSafeHtml(new SafeHtmlBuilder().appendEscaped(employee.getName()).toSafeHtml());
         popup = FormPopup.getFormPopup(this);
         popup.center();
     }
@@ -130,15 +112,15 @@ public class EmployeeEditForm implements IsElement {
     @EventHandler("saveButton")
     public void save(ClickEvent click) {
         employee.setName(employeeName.getValue());
-        Map<Skill, EmployeeSkillProficiency> proficiencyMap = employee.getSkillProficiencySet().stream()
+        Map<Skill, EmployeeSkillProficiency> proficiencyMap = employee.getSkillProficiencySet()
+                .stream()
                 .collect(Collectors.toMap(EmployeeSkillProficiency::getSkill, Function.identity()));
         List<Skill> skillList = employeeSkills.getItems();
         for (Skill skill : skillList) {
             if (proficiencyMap.containsKey(skill)) {
                 proficiencyMap.remove(skill);
             } else {
-                EmployeeSkillProficiency proficiency = new EmployeeSkillProficiency(employee.getTenantId(), employee,
-                        skill);
+                EmployeeSkillProficiency proficiency = new EmployeeSkillProficiency(employee.getTenantId(), employee, skill);
                 employee.getSkillProficiencySet().add(proficiency);
             }
         }
@@ -146,8 +128,7 @@ public class EmployeeEditForm implements IsElement {
             employee.getSkillProficiencySet().remove(proficiency);
         }
         popup.hide();
-        EmployeeRestServiceBuilder.updateEmployee(employee.getTenantId(), employee, new FailureShownRestCallback<
-                Employee>() {
+        EmployeeRestServiceBuilder.updateEmployee(employee.getTenantId(), employee, new FailureShownRestCallback<Employee>() {
 
             @Override
             public void onSuccess(Employee employee) {

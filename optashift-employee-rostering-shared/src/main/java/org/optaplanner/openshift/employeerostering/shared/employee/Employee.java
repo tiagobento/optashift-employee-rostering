@@ -16,11 +16,9 @@
 
 package org.optaplanner.openshift.employeerostering.shared.employee;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+import org.optaplanner.openshift.employeerostering.shared.skill.Skill;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -31,20 +29,16 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
-import org.optaplanner.openshift.employeerostering.shared.skill.Skill;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@NamedQueries({
-        @NamedQuery(name = "Employee.findAll",
-                query = "select distinct e from Employee e left join fetch e.skillProficiencySet sp left join fetch sp.skill s"
-                        +
-                        " where e.tenantId = :tenantId" +
-                        " order by e.name, s.name"),
-})
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId", "name"}))
+@NamedQueries({ @NamedQuery(name = "Employee.findAll",
+                            query = "select distinct e from Employee e left join fetch e.skillProficiencySet sp left join fetch sp.skill s"
+                                    + " where e.tenantId = :tenantId"
+                                    + " order by e.name, s.name"), })
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "tenantId", "name" }))
 public class Employee extends AbstractPersistable {
 
     @NotNull
@@ -66,8 +60,7 @@ public class Employee extends AbstractPersistable {
     }
 
     public boolean hasSkill(Skill skill) {
-        return skillProficiencySet.stream()
-                .anyMatch(skillProficiency -> skillProficiency.getSkill().equals(skill));
+        return skillProficiencySet.stream().anyMatch(skillProficiency -> skillProficiency.getSkill().equals(skill));
     }
 
     public boolean hasSkills(Collection<Skill> skills) {

@@ -1,15 +1,14 @@
 package org.optaplanner.openshift.employeerostering.shared.lang.tokens;
 
-import java.util.List;
+import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeAvailabilityState;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
-import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeAvailabilityState;
+import java.util.List;
 
 /**
  * Describes the {@link EmployeeAvailabilityState} for an employee/employee group.<br>
@@ -52,14 +51,17 @@ public class EmployeeTimeSlotInfo extends AbstractPersistable {
         this.defaultAvailability = availability;
     }
 
-    public EmployeeTimeSlotInfo(Integer tenantId, IdOrGroup id, EmployeeAvailabilityState availability, List<
-            EmployeeConditional> availabilityConditions) {
+    public EmployeeTimeSlotInfo(Integer tenantId,
+            IdOrGroup id,
+            EmployeeAvailabilityState availability,
+            List<EmployeeConditional> availabilityConditions) {
         this(tenantId, id, availability);
         this.availabilityConditionList = availabilityConditions;
     }
 
     /**
      * Getter for {@link EmployeeTimeSlotInfo#employeeId}
+     *
      * @return Value of {@link EmployeeTimeSlotInfo#employeeId}
      */
     public IdOrGroup getEmployeeId() {
@@ -68,7 +70,7 @@ public class EmployeeTimeSlotInfo extends AbstractPersistable {
 
     /**
      * Setter for {@link EmployeeTimeSlotInfo#employeeId}
-     * 
+     *
      * @param id Value to set {@link EmployeeTimeSlotInfo#employeeId} to
      */
     public void setEmployeeId(IdOrGroup id) {
@@ -77,6 +79,7 @@ public class EmployeeTimeSlotInfo extends AbstractPersistable {
 
     /**
      * Getter for {@link EmployeeTimeSlotInfo#defaultAvailability}
+     *
      * @return Value of {@link EmployeeTimeSlotInfo#defaultAvailability}
      */
     public EmployeeAvailabilityState getDefaultAvailability() {
@@ -85,7 +88,7 @@ public class EmployeeTimeSlotInfo extends AbstractPersistable {
 
     /**
      * Setter for {@link EmployeeTimeSlotInfo#defaultAvailability}
-     * 
+     *
      * @param availability Value to set {@link EmployeeTimeSlotInfo#defaultAvailability} to
      */
     public void setDefaultAvailability(EmployeeAvailabilityState availability) {
@@ -94,6 +97,7 @@ public class EmployeeTimeSlotInfo extends AbstractPersistable {
 
     /**
      * Getter for {@link EmployeeTimeSlotInfo#availabilityConditionList}
+     *
      * @return Value of {@link EmployeeTimeSlotInfo#availabilityConditionList}
      */
     public List<EmployeeConditional> getAvailabilityConditionList() {
@@ -102,7 +106,7 @@ public class EmployeeTimeSlotInfo extends AbstractPersistable {
 
     /**
      * Setter for {@link EmployeeTimeSlotInfo#availabilityConditionList}
-     * 
+     *
      * @param availabilityConditionList Value to set {@link EmployeeTimeSlotInfo#availabilityConditionList} to
      */
     public void setAvailabilityConditionList(List<EmployeeConditional> availabilityConditionList) {

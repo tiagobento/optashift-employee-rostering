@@ -16,8 +16,8 @@
 
 package org.optaplanner.openshift.employeerostering.shared.spot;
 
-import java.util.List;
-import java.util.Set;
+import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+import org.optaplanner.openshift.employeerostering.shared.skill.Skill;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,19 +28,14 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
-import org.optaplanner.openshift.employeerostering.shared.skill.Skill;
+import java.util.Set;
 
 @Entity
-@NamedQueries({
-        @NamedQuery(name = "Spot.findAll",
-                query = "select distinct s from Spot s left join fetch s.requiredSkillSet" +
-                        " where s.tenantId = :tenantId" +
-                        " order by s.name"),
-})
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"tenantId", "name"}), @UniqueConstraint(columnNames = {
-        "id"})})
+@NamedQueries({ @NamedQuery(name = "Spot.findAll",
+                            query = "select distinct s from Spot s left join fetch s.requiredSkillSet"
+                                    + " where s.tenantId = :tenantId"
+                                    + " order by s.name"), })
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "tenantId", "name" }), @UniqueConstraint(columnNames = { "id" }) })
 public class Spot extends AbstractPersistable {
 
     @NotNull

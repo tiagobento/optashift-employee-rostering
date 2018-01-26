@@ -1,14 +1,9 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.roster;
 
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import org.gwtbootstrap3.client.ui.Button;
-import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
 import org.jboss.errai.ui.client.local.api.IsElement;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
@@ -18,7 +13,11 @@ import org.optaplanner.openshift.employeerostering.gwtui.client.common.FailureSh
 import org.optaplanner.openshift.employeerostering.shared.roster.RosterRestServiceBuilder;
 import org.optaplanner.openshift.employeerostering.shared.tenant.Tenant;
 
-import static org.optaplanner.openshift.employeerostering.gwtui.client.resources.i18n.OptaShiftUIConstants.*;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+
+import static org.optaplanner.openshift.employeerostering.gwtui.client.resources.i18n.OptaShiftUIConstants.AbstractRosterViewPanel_finishedSolving;
+import static org.optaplanner.openshift.employeerostering.gwtui.client.resources.i18n.OptaShiftUIConstants.AbstractRosterViewPanel_solvingFor;
 
 public abstract class AbstractRosterViewPanel implements Observer, IsElement {
 
@@ -52,9 +51,7 @@ public abstract class AbstractRosterViewPanel implements Observer, IsElement {
         solveButton.getElement().setAttribute("class", "btn btn-success");
         buttonImage.getElement().setAttribute("class", "glyphicon glyphicon-play");
         buttonImage.getElement().setAttribute("aria-hidden", "true");
-        buttonText.setHTML(new SafeHtmlBuilder()
-                .appendEscaped(CONSTANTS.format("AbstractRosterViewPanel.solve"))
-                .toSafeHtml().asString());
+        buttonText.setHTML(new SafeHtmlBuilder().appendEscaped(CONSTANTS.format("AbstractRosterViewPanel.solve")).toSafeHtml().asString());
         buttonContent.add(buttonImage);
         buttonContent.add(buttonText);
         solveButton.add(buttonContent);
@@ -81,27 +78,25 @@ public abstract class AbstractRosterViewPanel implements Observer, IsElement {
                 solveButton.getElement().setAttribute("class", "btn btn-danger");
                 buttonImage.getElement().setAttribute("class", "glyphicon glyphicon-stop");
                 buttonImage.getElement().setAttribute("aria-hidden", "true");
-                buttonText.setHTML(new SafeHtmlBuilder()
-                        .appendEscaped(CONSTANTS.format("AbstractRosterViewPanel.terminateEarly"))
-                        .toSafeHtml().asString());
+                buttonText.setHTML(new SafeHtmlBuilder().appendEscaped(CONSTANTS.format("AbstractRosterViewPanel.terminateEarly"))
+                        .toSafeHtml()
+                        .asString());
                 isSolving = true;
             } else if (arg instanceof TerminateSolvingEvent) {
                 solveButton.getElement().setAttribute("class", "btn btn-success");
                 buttonImage.getElement().setAttribute("class", "glyphicon glyphicon-play");
                 buttonImage.getElement().setAttribute("aria-hidden", "true");
-                buttonText.setHTML(new SafeHtmlBuilder()
-                        .appendEscaped(CONSTANTS.format("AbstractRosterViewPanel.solve"))
-                        .toSafeHtml().asString());
+                buttonText.setHTML(
+                        new SafeHtmlBuilder().appendEscaped(CONSTANTS.format("AbstractRosterViewPanel.solve")).toSafeHtml().asString());
                 isSolving = false;
-                solveStatus.setHTML(new SafeHtmlBuilder()
-                        .appendHtmlConstant(CONSTANTS.format(AbstractRosterViewPanel_finishedSolving) + ".")
-                        .toSafeHtml().asString());
+                solveStatus.setHTML(
+                        new SafeHtmlBuilder().appendHtmlConstant(CONSTANTS.format(AbstractRosterViewPanel_finishedSolving) + ".")
+                                .toSafeHtml()
+                                .asString());
             } else if (arg instanceof SetSolvingTimeEvent) {
                 SetSolvingTimeEvent event = (SetSolvingTimeEvent) arg;
-                solveStatus.setHTML(new SafeHtmlBuilder()
-                        .appendHtmlConstant(CONSTANTS.format(AbstractRosterViewPanel_solvingFor, event
-                                .getSecondsRemaining()))
-                        .toSafeHtml().asString());
+                solveStatus.setHTML(new SafeHtmlBuilder().appendHtmlConstant(
+                        CONSTANTS.format(AbstractRosterViewPanel_solvingFor, event.getSecondsRemaining())).toSafeHtml().asString());
             }
         }
     }

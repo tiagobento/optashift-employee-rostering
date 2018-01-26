@@ -6,8 +6,8 @@ import com.google.gwt.resources.client.ImageResource;
 
 public interface ImageResources extends ClientBundle {
 
+    public ImageResources INSTANCE = GWT.create(ImageResources.class);
 
-public ImageResources INSTANCE = GWT.create(ImageResources.class);
     @Source("errorIcon.png")
     ImageResource errorIcon();
 }

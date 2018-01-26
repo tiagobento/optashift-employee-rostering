@@ -16,7 +16,7 @@
 
 package org.optaplanner.openshift.employeerostering.shared.tenant;
 
-import java.io.Serializable;
+import org.optaplanner.core.api.domain.lookup.PlanningId;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -32,17 +32,13 @@ import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.optaplanner.core.api.domain.lookup.PlanningId;
+import java.io.Serializable;
 
 @Entity
-@NamedQueries({
-               @NamedQuery(name = "Tenant.findAll",
-                           query = "select t from Tenant t" +
-                                   // Deliberately order by id instead of name to use generated order
-                                   " order by t.id"),
-})
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
+@NamedQueries({ @NamedQuery(name = "Tenant.findAll", query = "select t from Tenant t" +
+        // Deliberately order by id instead of name to use generated order
+        " order by t.id"), })
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name" }))
 public class Tenant implements Serializable {
 
     @Id

@@ -1,6 +1,9 @@
 package org.optaplanner.openshift.employeerostering.shared.employee;
 
-import java.util.List;
+import com.github.nmorel.gwtjackson.rest.processor.GenRestBuilder;
+import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+import org.optaplanner.openshift.employeerostering.shared.employee.view.EmployeeAvailabilityView;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -10,11 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import com.github.nmorel.gwtjackson.rest.processor.GenRestBuilder;
-import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
-import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
-import org.optaplanner.openshift.employeerostering.shared.employee.view.EmployeeAvailabilityView;
+import java.util.List;
 
 @Path("/tenant/{tenantId}/employee")
 @Produces(MediaType.APPLICATION_JSON)
@@ -41,7 +40,7 @@ public interface EmployeeRestService {
     @POST
     @Path("/add")
     Employee addEmployee(@PathParam("tenantId") Integer tenantId, Employee employee);
-    
+
     /**
      * @param employee never null
      * @return never null, with an updated {@link AbstractPersistable#getVersion()}
@@ -64,16 +63,14 @@ public interface EmployeeRestService {
      */
     @POST
     @Path("/availability/add")
-    Long addEmployeeAvailability(@PathParam("tenantId") Integer tenantId,
-            EmployeeAvailabilityView employeeAvailability);
+    Long addEmployeeAvailability(@PathParam("tenantId") Integer tenantId, EmployeeAvailabilityView employeeAvailability);
 
     /**
      * @param employeeAvailability never null
      */
     @PUT
     @Path("/availability/update")
-    void updateEmployeeAvailability(@PathParam("tenantId") Integer tenantId,
-            EmployeeAvailabilityView employeeAvailability);
+    void updateEmployeeAvailability(@PathParam("tenantId") Integer tenantId, EmployeeAvailabilityView employeeAvailability);
 
     @GET
     @Path("/groups/")
@@ -93,13 +90,11 @@ public interface EmployeeRestService {
 
     @POST
     @Path("/groups/{id}/add")
-    void addEmployeeToEmployeeGroup(@PathParam("tenantId") Integer tenantId, @PathParam("id") Long id,
-            Employee employee);
+    void addEmployeeToEmployeeGroup(@PathParam("tenantId") Integer tenantId, @PathParam("id") Long id, Employee employee);
 
     @POST
     @Path("/groups/{id}/remove")
-    void removeEmployeeFromEmployeeGroup(@PathParam("tenantId") Integer tenantId, @PathParam("id") Long id,
-            Employee employee);
+    void removeEmployeeFromEmployeeGroup(@PathParam("tenantId") Integer tenantId, @PathParam("id") Long id, Employee employee);
 
     @POST
     @Path("/groups/delete/{id}")

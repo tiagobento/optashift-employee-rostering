@@ -43,28 +43,28 @@ import java.time.calendrical.DateTimeValueRange;
  */
 public abstract class DefaultInterfaceDateTimeAccessor implements DateTimeAccessor {
 
-  @Override
-  public DateTimeValueRange range(DateTimeField field) {
+    @Override
+    public DateTimeValueRange range(DateTimeField field) {
 
-    if (field instanceof ChronoField) {
-      if (isSupported(field)) {
-        return field.range();
-      }
-      throw new DateTimeException("Unsupported field: " + field.getName());
+        if (field instanceof ChronoField) {
+            if (isSupported(field)) {
+                return field.range();
+            }
+            throw new DateTimeException("Unsupported field: " + field.getName());
+        }
+        return field.doRange(this);
     }
-    return field.doRange(this);
-  }
 
-  @Override
-  public int get(DateTimeField field) {
+    @Override
+    public int get(DateTimeField field) {
 
-    return range(field).checkValidIntValue(getLong(field), field);
-  }
+        return range(field).checkValidIntValue(getLong(field), field);
+    }
 
-  @Override
-  public <R> R query(Query<R> query) {
+    @Override
+    public <R> R query(Query<R> query) {
 
-    return query.doQuery(this);
-  }
+        return query.doQuery(this);
+    }
 
 }

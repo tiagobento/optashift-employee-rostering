@@ -2,11 +2,9 @@ package org.optaplanner.openshift.employeerostering.gwtui.client.calendar;
 
 import elemental2.dom.CanvasRenderingContext2D;
 import elemental2.dom.MouseEvent;
-import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.Drawable.PostMouseDownEvent;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.twodayview.TwoDayViewPresenter;
 import org.optaplanner.openshift.employeerostering.gwtui.client.canvas.CanvasUtils;
 import org.optaplanner.openshift.employeerostering.gwtui.client.canvas.CanvasUtils.Glyphs;
-import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
 import org.optaplanner.openshift.employeerostering.gwtui.client.spot.SpotId;
 
 public class ShiftToolbox extends AbstractDrawable {
@@ -18,11 +16,9 @@ public class ShiftToolbox extends AbstractDrawable {
     ShiftDrawable drawable;
     TwoDayViewPresenter<SpotId, ShiftData, ShiftDrawable> presenter;
 
-    public ShiftToolbox(ShiftDrawable parent, TwoDayViewPresenter<SpotId, ShiftData, ShiftDrawable> presenter, double x,
-            double y) {
+    public ShiftToolbox(ShiftDrawable parent, TwoDayViewPresenter<SpotId, ShiftData, ShiftDrawable> presenter, double x, double y) {
         this.x = Math.max(TwoDayViewPresenter.SPOT_NAME_WIDTH, x + presenter.getLocationOfDate(parent.getStartTime()));
-        this.y = Math.max(TwoDayViewPresenter.HEADER_HEIGHT, y + presenter.getLocationOfGroupSlot(parent.getGroupId(),
-                parent.getIndex()));
+        this.y = Math.max(TwoDayViewPresenter.HEADER_HEIGHT, y + presenter.getLocationOfGroupSlot(parent.getGroupId(), parent.getIndex()));
         this.presenter = presenter;
         this.drawable = parent;
         onRemove = false;

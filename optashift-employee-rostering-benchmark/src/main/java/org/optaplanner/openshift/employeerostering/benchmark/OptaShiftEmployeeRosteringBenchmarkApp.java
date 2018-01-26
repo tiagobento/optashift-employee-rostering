@@ -1,18 +1,16 @@
 package org.optaplanner.openshift.employeerostering.benchmark;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import org.optaplanner.benchmark.api.PlannerBenchmark;
 import org.optaplanner.benchmark.api.PlannerBenchmarkFactory;
 import org.optaplanner.core.api.solver.SolverFactory;
 import org.optaplanner.openshift.employeerostering.server.roster.RosterGenerator;
 import org.optaplanner.openshift.employeerostering.shared.roster.Roster;
-import org.optaplanner.persistence.xstream.impl.domain.solution.XStreamSolutionFileIO;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OptaShiftEmployeeRosteringBenchmarkApp {
 

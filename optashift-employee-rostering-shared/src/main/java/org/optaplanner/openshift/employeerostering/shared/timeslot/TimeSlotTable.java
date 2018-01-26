@@ -163,13 +163,16 @@ public class TimeSlotTable<T> {
         BoundaryPoint startPoint = new BoundaryPoint(end, true, null);
         BoundaryPoint endPoint = new BoundaryPoint(start, false, null);
         int indexOfFirstEndPointAfterStart = getFirstIndexOf(Collections.binarySearch(endPointList, endPoint), endPoint);
-        int indexOfLastStartPointBeforeEnd = getLastIndexOf(Collections.binarySearch(startPointList, startPoint),
-                startPoint);
+        int indexOfLastStartPointBeforeEnd = getLastIndexOf(Collections.binarySearch(startPointList, startPoint), startPoint);
 
         Set<UUID> endPointsAfterStartUUID = endPointList.subList(indexOfFirstEndPointAfterStart, endPointList.size())
-                .stream().map((e) -> e.getUUID()).collect(Collectors.toSet());
-        List<BoundaryPoint> startPointsBeforeEnd = startPointList.subList(0, indexOfLastStartPointBeforeEnd).stream()
-                .filter((s) -> endPointsAfterStartUUID.contains(s.getUUID())).collect(Collectors.toList());
+                .stream()
+                .map((e) -> e.getUUID())
+                .collect(Collectors.toSet());
+        List<BoundaryPoint> startPointsBeforeEnd = startPointList.subList(0, indexOfLastStartPointBeforeEnd)
+                .stream()
+                .filter((s) -> endPointsAfterStartUUID.contains(s.getUUID()))
+                .collect(Collectors.toList());
         return new TimeSlotIterator<T>(startPointsBeforeEnd, intervalDataMap).getTimeSlotsAsGrid();
     }
 
@@ -223,10 +226,9 @@ public class TimeSlotTable<T> {
 
                 int depth;
 
-                for (depth = 0; depth < prev.size() &&
-                        startPoint.getPosition() < prev.get(depth).getEndPoint().getPosition() &&
-                        endPoint.getPosition() > prev.get(depth).getStartPoint()
-                                .getPosition(); depth++) {
+                for (depth = 0; depth < prev.size()
+                        && startPoint.getPosition() < prev.get(depth).getEndPoint().getPosition()
+                        && endPoint.getPosition() > prev.get(depth).getStartPoint().getPosition(); depth++) {
                 }
 
                 nextDepth = depth;
@@ -282,12 +284,15 @@ public class TimeSlotTable<T> {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if (this == obj) {
                 return true;
-            if (obj == null)
+            }
+            if (obj == null) {
                 return false;
-            if (!(obj instanceof TimeSlot))
+            }
+            if (!(obj instanceof TimeSlot)) {
                 return false;
+            }
             TimeSlot other = (TimeSlot) obj;
 
             return this.getUUID().equals(other.getUUID());

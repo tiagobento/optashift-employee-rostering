@@ -40,29 +40,28 @@ import java.time.calendrical.PeriodUnit;
  */
 public abstract class DefaultInterfaceDateTime extends DefaultInterfaceDateTimeAccessor implements DateTime {
 
-  @Override
-  public DateTime with(WithAdjuster adjuster) {
+    @Override
+    public DateTime with(WithAdjuster adjuster) {
 
-    return adjuster.doWithAdjustment(this);
-  }
+        return adjuster.doWithAdjustment(this);
+    }
 
-  @Override
-  public DateTime plus(PlusAdjuster adjuster) {
+    @Override
+    public DateTime plus(PlusAdjuster adjuster) {
 
-    return adjuster.doPlusAdjustment(this);
-  }
+        return adjuster.doPlusAdjustment(this);
+    }
 
-  @Override
-  public DateTime minus(MinusAdjuster adjuster) {
+    @Override
+    public DateTime minus(MinusAdjuster adjuster) {
 
-    return adjuster.doMinusAdjustment(this);
-  }
+        return adjuster.doMinusAdjustment(this);
+    }
 
-  @Override
-  public DateTime minus(long amountToSubtract, PeriodUnit unit) {
+    @Override
+    public DateTime minus(long amountToSubtract, PeriodUnit unit) {
 
-    return (amountToSubtract == Long.MIN_VALUE ? plus(Long.MAX_VALUE, unit).plus(1, unit) : plus(-amountToSubtract,
-        unit));
-  }
+        return (amountToSubtract == Long.MIN_VALUE ? plus(Long.MAX_VALUE, unit).plus(1, unit) : plus(-amountToSubtract, unit));
+    }
 
 }

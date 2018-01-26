@@ -1,14 +1,12 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.spot;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
-
-import javax.inject.Provider;
-
-import org.optaplanner.openshift.employeerostering.gwtui.client.spot.SpotDataFetchable;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.ShiftData;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.Fetchable;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.Updatable;
+
+import javax.inject.Provider;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class SpotShiftFetchable implements Fetchable<Collection<ShiftData>> {
 

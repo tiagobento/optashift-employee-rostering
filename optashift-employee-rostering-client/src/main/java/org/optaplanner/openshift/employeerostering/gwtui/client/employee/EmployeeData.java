@@ -1,17 +1,12 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.employee;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.HasTimeslot;
-import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
-import org.optaplanner.openshift.employeerostering.gwtui.client.spot.SpotData;
 import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
 import org.optaplanner.openshift.employeerostering.shared.employee.view.EmployeeAvailabilityView;
 import org.optaplanner.openshift.employeerostering.shared.shift.Shift;
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
-import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlot;
+
+import java.time.LocalDateTime;
 
 public class EmployeeData implements HasTimeslot<EmployeeId> {
 
@@ -21,8 +16,7 @@ public class EmployeeData implements HasTimeslot<EmployeeId> {
     private EmployeeAvailabilityView availabilityView;
 
     public EmployeeData(Shift shift, EmployeeAvailabilityView availabilityView) {
-        this.id = new Identity(shift.getEmployee(), shift.getTimeSlot().getStartDateTime(), shift.getTimeSlot()
-                .getEndDateTime());
+        this.id = new Identity(shift.getEmployee(), shift.getTimeSlot().getStartDateTime(), shift.getTimeSlot().getEndDateTime());
         this.shift = shift;
         this.availabilityView = availabilityView;
         this.employeeId = new EmployeeId(shift.getEmployee());
@@ -97,8 +91,7 @@ public class EmployeeData implements HasTimeslot<EmployeeId> {
         public boolean equals(Object o) {
             if (o instanceof Identity) {
                 Identity other = (Identity) o;
-                return employee.equals(other.employee) && startTime.equals(other.startTime) && endTime.equals(
-                        other.endTime);
+                return employee.equals(other.employee) && startTime.equals(other.startTime) && endTime.equals(other.endTime);
             }
             return false;
         }

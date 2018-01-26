@@ -1,7 +1,6 @@
 package org.optaplanner.openshift.employeerostering.shared.employee;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -11,22 +10,19 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@NamedQueries({
-        @NamedQuery(name = "EmployeeGroup.findByName",
-                query = "select distinct g from EmployeeGroup g left join fetch g.employees" +
-                        " where g.tenantId = :tenantId and g.name = :name" +
-                        " order by g.name"),
-        @NamedQuery(name = "EmployeeGroup.findAll",
-                query = "select distinct g from EmployeeGroup g left join fetch g.employees" +
-                        " where g.tenantId = :tenantId" +
-                        " order by g.name"),
-})
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId", "name"}))
+@NamedQueries({ @NamedQuery(name = "EmployeeGroup.findByName",
+                            query = "select distinct g from EmployeeGroup g left join fetch g.employees"
+                                    + " where g.tenantId = :tenantId and g.name = :name"
+                                    + " order by g.name"),
+                @NamedQuery(name = "EmployeeGroup.findAll",
+                            query = "select distinct g from EmployeeGroup g left join fetch g.employees"
+                                    + " where g.tenantId = :tenantId"
+                                    + " order by g.name"), })
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "tenantId", "name" }))
 public class EmployeeGroup extends AbstractPersistable {
 
     public static final Long ALL_GROUP_ID = Long.valueOf(-1);

@@ -1,13 +1,13 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.calendar.twodayview;
 
-import java.time.LocalDateTime;
-
 import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.DateDisplay;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.HasTitle;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.TimeRowDrawable;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.TimeRowDrawableProvider;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.HasTimeslot;
+
+import java.time.LocalDateTime;
 
 public class TwoDayViewConfig<G extends HasTitle, I extends HasTimeslot<G>, D extends TimeRowDrawable<G, I>> {
 
@@ -24,8 +24,10 @@ public class TwoDayViewConfig<G extends HasTitle, I extends HasTimeslot<G>, D ex
     private int editMinuteGradality;
     private int displayMinuteGradality;
 
-    public TwoDayViewConfig(TwoDayViewPresenter<G, I, D> presenter, TranslationService translator,
-            DateDisplay dateFormat, TimeRowDrawableProvider<G, I, D> drawableProvider) {
+    public TwoDayViewConfig(TwoDayViewPresenter<G, I, D> presenter,
+            TranslationService translator,
+            DateDisplay dateFormat,
+            TimeRowDrawableProvider<G, I, D> drawableProvider) {
         this.presenter = presenter;
         this.translator = translator;
         this.dateFormat = dateFormat;
@@ -81,8 +83,7 @@ public class TwoDayViewConfig<G extends HasTitle, I extends HasTimeslot<G>, D ex
         }
         this.daysShown = daysShown;
         presenter.setToolBox(null);
-        presenter.getCalendar().setViewSize(presenter.getState().getScreenWidth(), presenter.getState()
-                .getScreenHeight());
+        presenter.getCalendar().setViewSize(presenter.getState().getScreenWidth(), presenter.getState().getScreenHeight());
         presenter.draw();
     }
 

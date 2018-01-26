@@ -1,25 +1,24 @@
 package org.optaplanner.openshift.employeerostering.shared.lang.parser;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.optaplanner.openshift.employeerostering.shared.lang.parser.ParserException;
 import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeAvailabilityState;
 import org.optaplanner.openshift.employeerostering.shared.lang.tokens.EmployeeConditional;
 import org.optaplanner.openshift.employeerostering.shared.lang.tokens.ShiftConditional;
 import org.optaplanner.openshift.employeerostering.shared.lang.tokens.ShiftInfo;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A {@link DateMatcher} is a conjunction of {@link DatePredicate}s, matching only if all
  * the {@link DatePredicate}s match. A DateMatcher expression is defined by the following structure:
- * 
+ * <p>
  * if p is a {@link DatePredicate} expression and m is a {@link DateMatcher} expression, then:
  * <br>
  * 1. p is a {@link DateMatcher} expression<br>
  * 2. p&m is a {@link DateMatcher} expression<br>
  * 3. Nothing else is a {@link DateMatcher} expression<br>
- * 
+ *
  * @param <T> Type of replacement if matched
  */
 public class DateMatcher<T> {
@@ -46,7 +45,7 @@ public class DateMatcher<T> {
 
     /**
      * Constructs a DateMatcher from the expression
-     * 
+     *
      * @param expr A DateMatcher expression as described in {@link DateMatcher}
      * @return A new DateMatcher generated from {@code expr} with a null replacement.
      * @throws ParserException If {@code expr} is not a valid DateMatcher expression
@@ -65,7 +64,7 @@ public class DateMatcher<T> {
 
     /**
      * Constructs a DateMatcher from the ShiftConditional
-     * 
+     *
      * @param expr A ShiftConditional to generate the DateMatcher from
      * @return A new DateMatcher generated from {@code ShiftConditional#condition} using {@code ShiftConditional#shift}
      * as the replacement
@@ -85,14 +84,13 @@ public class DateMatcher<T> {
 
     /**
      * Constructs a DateMatcher from the EmployeeConditional
-     * 
+     *
      * @param expr A EmployeeConditional to generate the DateMatcher from
      * @return A new DateMatcher generated from {@code EmployeeConditional#condition} using {@code EmployeeConditional#avaliability}
      * as the replacement
      * @throws ParserException If {@link EmployeeConditional#condition} is not a valid DateMatcher expression
      */
-    public static DateMatcher<EmployeeAvailabilityState> getDateMatcher(EmployeeConditional expr)
-            throws ParserException {
+    public static DateMatcher<EmployeeAvailabilityState> getDateMatcher(EmployeeConditional expr) throws ParserException {
         String[] subexprs = expr.getCondition().split("&");
         if (1 < subexprs.length) {
             throw new ParserException("Date Matcher requires at least one predicate");

@@ -1,21 +1,19 @@
 package org.optaplanner.openshift.employeerostering.shared.lang.tokens;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
 import org.optaplanner.openshift.employeerostering.shared.jackson.LocalDateTimeDeserializer;
 import org.optaplanner.openshift.employeerostering.shared.jackson.LocalDateTimeSerializer;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Describes a shift to generate.<br>
@@ -67,7 +65,7 @@ public class ShiftInfo extends AbstractPersistable {
     /**
      * List of employees/employee groups and their availability. If an employee appear multiple
      * times or in multiple groups in this list, their last entry in the list determines their
-     * availability 
+     * availability
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderColumn(name = "orderIndex")
@@ -88,8 +86,11 @@ public class ShiftInfo extends AbstractPersistable {
         this(tenantId, src.startTime, src.endTime, src.spotList, src.employeeList, src.exceptionList);
     }
 
-    public ShiftInfo(Integer tenantId, LocalDateTime startTime, LocalDateTime endTime, List<IdOrGroup> spots, List<
-            EmployeeTimeSlotInfo> employees) {
+    public ShiftInfo(Integer tenantId,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
+            List<IdOrGroup> spots,
+            List<EmployeeTimeSlotInfo> employees) {
         super(tenantId);
         this.startTime = startTime;
         this.endTime = endTime;
@@ -97,8 +98,12 @@ public class ShiftInfo extends AbstractPersistable {
         this.employeeList = employees;
     }
 
-    public ShiftInfo(Integer tenantId, LocalDateTime startTime, LocalDateTime endTime, List<IdOrGroup> spots, List<
-            EmployeeTimeSlotInfo> employees, List<ShiftConditional> exceptions) {
+    public ShiftInfo(Integer tenantId,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
+            List<IdOrGroup> spots,
+            List<EmployeeTimeSlotInfo> employees,
+            List<ShiftConditional> exceptions) {
         super(tenantId);
         this.startTime = startTime;
         this.endTime = endTime;
@@ -109,6 +114,7 @@ public class ShiftInfo extends AbstractPersistable {
 
     /**
      * Getter for {@link ShiftInfo#startTime}
+     *
      * @return Value of {@link ShiftInfo#startTime}
      */
     public LocalDateTime getStartTime() {
@@ -117,6 +123,7 @@ public class ShiftInfo extends AbstractPersistable {
 
     /**
      * Getter for {@link ShiftInfo#endTime}
+     *
      * @return Value of {@link ShiftInfo#endTime}
      */
     public LocalDateTime getEndTime() {
@@ -125,6 +132,7 @@ public class ShiftInfo extends AbstractPersistable {
 
     /**
      * Getter for {@link ShiftInfo#spotList}
+     *
      * @return Value of {@link ShiftInfo#spotList}
      */
     public List<IdOrGroup> getSpotList() {
@@ -133,7 +141,7 @@ public class ShiftInfo extends AbstractPersistable {
 
     /**
      * Setter for {@link ShiftInfo#spotList}
-     * 
+     *
      * @param spots Value to set {@link ShiftInfo#spotList} to
      */
     public void setSpotList(List<IdOrGroup> spotList) {
@@ -142,6 +150,7 @@ public class ShiftInfo extends AbstractPersistable {
 
     /**
      * Getter for {@link ShiftInfo#employeeList}
+     *
      * @return Value of {@link ShiftInfo#employeeList}
      */
     public List<EmployeeTimeSlotInfo> getEmployeeList() {
@@ -150,7 +159,7 @@ public class ShiftInfo extends AbstractPersistable {
 
     /**
      * Setter for {@link ShiftInfo#employeeList}
-     * 
+     *
      * @param employeeList Value to set {@link ShiftInfo#employeeList} to
      */
     public void setEmployeeList(List<EmployeeTimeSlotInfo> employeeList) {
@@ -159,6 +168,7 @@ public class ShiftInfo extends AbstractPersistable {
 
     /**
      * Getter for {@link ShiftInfo#exceptionList}
+     *
      * @return Value of {@link ShiftInfo#exceptionList}
      */
     public List<ShiftConditional> getExceptionList() {
@@ -167,7 +177,7 @@ public class ShiftInfo extends AbstractPersistable {
 
     /**
      * Setter for {@link ShiftInfo#exceptionList}
-     * 
+     *
      * @param exceptionList Value to set {@link ShiftInfo#exceptionList} to
      */
     public void setExceptionList(List<ShiftConditional> exceptionList) {
@@ -176,7 +186,7 @@ public class ShiftInfo extends AbstractPersistable {
 
     /**
      * Setter for {@link ShiftInfo#startTime}
-     * 
+     *
      * @param startTime Value to set {@link ShiftInfo#startTime} to
      */
     public void setStartTime(LocalDateTime startTime) {
@@ -185,7 +195,7 @@ public class ShiftInfo extends AbstractPersistable {
 
     /**
      * Setter for {@link ShiftInfo#endTime}
-     * 
+     *
      * @param endTime Value to set {@link ShiftInfo#endTime} to
      */
     public void setEndTime(LocalDateTime endTime) {

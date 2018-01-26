@@ -1,16 +1,14 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.employee;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.inject.Provider;
-
 import org.optaplanner.openshift.employeerostering.gwtui.client.common.FailureShownRestCallback;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.Fetchable;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.Updatable;
 import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
-import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
 import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeRestServiceBuilder;
+
+import javax.inject.Provider;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class EmployeeNameFetchable implements Fetchable<List<EmployeeId>> {
 
@@ -23,13 +21,11 @@ public class EmployeeNameFetchable implements Fetchable<List<EmployeeId>> {
 
     @Override
     public void fetchData(Command after) {
-        EmployeeRestServiceBuilder.getEmployeeList(tenantIdProvider.get(), new FailureShownRestCallback<List<
-                Employee>>() {
+        EmployeeRestServiceBuilder.getEmployeeList(tenantIdProvider.get(), new FailureShownRestCallback<List<Employee>>() {
 
             @Override
             public void onSuccess(List<Employee> employeeList) {
-                updatable.onUpdate(employeeList.stream().map((employee) -> new EmployeeId(employee)).collect(Collectors
-                        .toList()));
+                updatable.onUpdate(employeeList.stream().map((employee) -> new EmployeeId(employee)).collect(Collectors.toList()));
                 after.execute();
             }
         });

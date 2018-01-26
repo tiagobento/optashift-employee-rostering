@@ -1,16 +1,5 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.calendar.twodayview;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.DynamicContainer;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.HasTitle;
 import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.Position;
@@ -19,6 +8,16 @@ import org.optaplanner.openshift.employeerostering.gwtui.client.calendar.TimeSlo
 import org.optaplanner.openshift.employeerostering.gwtui.client.common.CommonUtils;
 import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.HasTimeslot;
 import org.optaplanner.openshift.employeerostering.shared.timeslot.TimeSlotTable;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TwoDayViewState<G extends HasTitle, I extends HasTimeslot<G>, D extends TimeRowDrawable<G, I>> {
 
@@ -75,10 +74,9 @@ public class TwoDayViewState<G extends HasTitle, I extends HasTimeslot<G>, D ext
 
     public void setGroupList(List<G> groupList) {
         groupIndexMap.clear();
-        this.groupList = groupList.stream().sorted((a, b) -> CommonUtils.stringWithIntCompareTo(a.getTitle(), b
-                .getTitle()))
-                .collect(Collectors
-                        .toList());
+        this.groupList = groupList.stream()
+                .sorted((a, b) -> CommonUtils.stringWithIntCompareTo(a.getTitle(), b.getTitle()))
+                .collect(Collectors.toList());
         for (int i = 0; i < this.groupList.size(); i++) {
             groupIndexMap.put(this.groupList.get(i), i);
         }
@@ -114,9 +112,8 @@ public class TwoDayViewState<G extends HasTitle, I extends HasTimeslot<G>, D ext
 
     public TimeSlotTableView<G, I, D> getTimeSlotTable() {
         if (null == timeSlotTableView) {
-            timeSlotTableView = new TimeSlotTableView<>(presenter, groupList, Collections.emptyList(),
-                    getViewStartDate(),
-                    getViewEndDate(), presenter.getConfig().getDrawableProvider());
+            timeSlotTableView = new TimeSlotTableView<>(presenter, groupList, Collections.emptyList(), getViewStartDate(), getViewEndDate(),
+                    presenter.getConfig().getDrawableProvider());
         }
         return timeSlotTableView;
     }
@@ -146,8 +143,7 @@ public class TwoDayViewState<G extends HasTitle, I extends HasTimeslot<G>, D ext
     }
 
     public double getLocationOfGroupSlot(G group, int slot) {
-        return TwoDayViewPresenter.HEADER_HEIGHT + (getGroupPosMap().get(group) + slot) * getGroupHeight()
-                - getOffsetY();
+        return TwoDayViewPresenter.HEADER_HEIGHT + (getGroupPosMap().get(group) + slot) * getGroupHeight() - getOffsetY();
     }
 
     public boolean isDirty() {
@@ -187,14 +183,11 @@ public class TwoDayViewState<G extends HasTitle, I extends HasTimeslot<G>, D ext
     }
 
     public double getOffsetX() {
-        return getLocationOfDate(baseDate.plusSeconds(currDay.toEpochSecond(
-                ZoneOffset.UTC) - baseDate.toEpochSecond(
-                        ZoneOffset.UTC)));
+        return getLocationOfDate(baseDate.plusSeconds(currDay.toEpochSecond(ZoneOffset.UTC) - baseDate.toEpochSecond(ZoneOffset.UTC)));
     }
 
     public double getOffsetY() {
-        return (presenter.getView().getScreenHeight() - TwoDayViewPresenter.HEADER_HEIGHT - spotHeight) * presenter
-                .getPage();
+        return (presenter.getView().getScreenHeight() - TwoDayViewPresenter.HEADER_HEIGHT - spotHeight) * presenter.getPage();
     }
 
     public Map<G, Integer> getGroupPosMap() {
@@ -214,30 +207,27 @@ public class TwoDayViewState<G extends HasTitle, I extends HasTimeslot<G>, D ext
     }
 
     public double getLocationOfDate(LocalDateTime date) {
-        return ((date.toEpochSecond(ZoneOffset.UTC) - currDay.toEpochSecond(ZoneOffset.UTC)) / 60)
-                * getWidthPerMinute() + TwoDayViewPresenter.SPOT_NAME_WIDTH;
+        return ((date.toEpochSecond(ZoneOffset.UTC) - currDay.toEpochSecond(ZoneOffset.UTC)) / 60) * getWidthPerMinute()
+                + TwoDayViewPresenter.SPOT_NAME_WIDTH;
 
     }
 
     public double getDaysBetweenEndpoints() {
-        if (presenter.getConfig().getHardStartDateBound() != null && presenter.getConfig()
-                .getHardEndDateBound() != null) {
-            return (presenter.getConfig().getHardEndDateBound().toEpochSecond(ZoneOffset.UTC) -
-                    presenter.getConfig().getHardStartDateBound().toEpochSecond(ZoneOffset.UTC) + 0.0)
-                    / TwoDayViewPresenter.SECONDS_PER_DAY;
+        if (presenter.getConfig().getHardStartDateBound() != null && presenter.getConfig().getHardEndDateBound() != null) {
+            return (presenter.getConfig().getHardEndDateBound().toEpochSecond(ZoneOffset.UTC) - presenter.getConfig()
+                    .getHardStartDateBound()
+                    .toEpochSecond(ZoneOffset.UTC) + 0.0) / TwoDayViewPresenter.SECONDS_PER_DAY;
         }
         return 0;
     }
 
     public double getDifferenceFromBaseDate() {
-        return (currDay.toEpochSecond(ZoneOffset.UTC) - baseDate.toEpochSecond(ZoneOffset.UTC))
-                / (TwoDayViewPresenter.SECONDS_PER_DAY
-                        + 0.0);
+        return (currDay.toEpochSecond(ZoneOffset.UTC) - baseDate.toEpochSecond(ZoneOffset.UTC)) / (TwoDayViewPresenter.SECONDS_PER_DAY
+                + 0.0);
     }
 
     public LocalDateTime roundLocalDateTime(LocalDateTime toRound) {
-        long fromMins = Math.round(toRound.toEpochSecond(ZoneOffset.UTC) / (60.0 * presenter.getConfig()
-                .getEditMinuteGradality()))
+        long fromMins = Math.round(toRound.toEpochSecond(ZoneOffset.UTC) / (60.0 * presenter.getConfig().getEditMinuteGradality()))
                 * presenter.getConfig().getEditMinuteGradality();
         return LocalDateTime.ofEpochSecond(60 * fromMins, 0, ZoneOffset.UTC);
     }
@@ -272,28 +262,25 @@ public class TwoDayViewState<G extends HasTitle, I extends HasTimeslot<G>, D ext
         for (G group : groupList) {
             final long spotStartPos = totalSpotSlots;
             groupContainerMap.put(group, new DynamicContainer(() -> new Position(TwoDayViewPresenter.SPOT_NAME_WIDTH,
-                    TwoDayViewPresenter.HEADER_HEIGHT
-                            + spotStartPos * getGroupHeight())));
+                    TwoDayViewPresenter.HEADER_HEIGHT + spotStartPos * getGroupHeight())));
 
             TimeSlotTable<I> timeSlotTable = new TimeSlotTable<>();
             for (I shift : shifts.stream().filter((s) -> s.getGroupId().equals(group)).collect(Collectors.toList())) {
-                timeSlotTable.add(shift.getStartTime().toEpochSecond(ZoneOffset.UTC),
-                        shift.getEndTime().toEpochSecond(ZoneOffset.UTC), shift);
+                timeSlotTable.add(shift.getStartTime().toEpochSecond(ZoneOffset.UTC), shift.getEndTime().toEpochSecond(ZoneOffset.UTC),
+                        shift);
             }
             timeSlotTables.add(timeSlotTable);
             groupContainerMap.put(group, new DynamicContainer(() -> {
-                return new Position(TwoDayViewPresenter.SPOT_NAME_WIDTH, TwoDayViewPresenter.HEADER_HEIGHT
-                        + getGroupPosMap().get(group) * presenter.getGroupHeight());
+                return new Position(TwoDayViewPresenter.SPOT_NAME_WIDTH,
+                        TwoDayViewPresenter.HEADER_HEIGHT + getGroupPosMap().get(group) * presenter.getGroupHeight());
             }));
             groupAddPlaneMap.put(group, new DynamicContainer(() -> {
-                return new Position(TwoDayViewPresenter.SPOT_NAME_WIDTH, (getGroupEndPosMap().get(group) + 1)
-                        * presenter
-                                .getGroupHeight());
+                return new Position(TwoDayViewPresenter.SPOT_NAME_WIDTH, (getGroupEndPosMap().get(group) + 1) * presenter.getGroupHeight());
             }));
         }
 
-        timeSlotTableView = new TimeSlotTableView<>(presenter, groupList, timeSlotTables, getViewStartDate(),
-                getViewEndDate(), presenter.getConfig().getDrawableProvider());
+        timeSlotTableView = new TimeSlotTableView<>(presenter, groupList, timeSlotTables, getViewStartDate(), getViewEndDate(),
+                presenter.getConfig().getDrawableProvider());
 
         for (G spot : groupList) {
             presenter.getCursorIndexMap().put(spot, getGroupEndPosMap().get(spot));

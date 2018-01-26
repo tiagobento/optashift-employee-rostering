@@ -1,26 +1,11 @@
 package org.optaplanner.openshift.employeerostering.gwtui.client.employee;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupPanel;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Pagination;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
@@ -38,16 +23,25 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.optaplanner.openshift.employeerostering.gwtui.client.common.FailureShownRestCallback;
-import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
-import org.optaplanner.openshift.employeerostering.gwtui.client.resources.css.CssResources;
+import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
+import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeRestServiceBuilder;
 import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeSkillProficiency;
 import org.optaplanner.openshift.employeerostering.shared.skill.Skill;
 import org.optaplanner.openshift.employeerostering.shared.skill.SkillRestServiceBuilder;
-import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
-import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeRestServiceBuilder;
 import org.optaplanner.openshift.employeerostering.shared.tenant.Tenant;
 
-import static org.optaplanner.openshift.employeerostering.gwtui.client.resources.i18n.OptaShiftUIConstants.*;
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.optaplanner.openshift.employeerostering.gwtui.client.resources.i18n.OptaShiftUIConstants.General_actions;
+import static org.optaplanner.openshift.employeerostering.gwtui.client.resources.i18n.OptaShiftUIConstants.General_delete;
+import static org.optaplanner.openshift.employeerostering.gwtui.client.resources.i18n.OptaShiftUIConstants.General_edit;
+import static org.optaplanner.openshift.employeerostering.gwtui.client.resources.i18n.OptaShiftUIConstants.General_name;
+import static org.optaplanner.openshift.employeerostering.gwtui.client.resources.i18n.OptaShiftUIConstants.General_skills;
 
 @Templated
 public class EmployeeListPanel implements IsElement {
@@ -153,12 +147,13 @@ public class EmployeeListPanel implements IsElement {
                 if (skillProficiencySet == null) {
                     return "";
                 }
-                return skillProficiencySet.stream().map(skillProficiency -> skillProficiency.getSkill().getName())
+                return skillProficiencySet.stream()
+                        .map(skillProficiency -> skillProficiency.getSkill().getName())
                         .collect(Collectors.joining(", "));
             }
         }, CONSTANTS.format(General_skills));
-        Column<Employee, String> deleteColumn = new Column<Employee, String>(new ButtonCell(IconType.REMOVE,
-                ButtonType.DANGER, ButtonSize.SMALL)) {
+        Column<Employee, String> deleteColumn = new Column<Employee, String>(
+                new ButtonCell(IconType.REMOVE, ButtonType.DANGER, ButtonSize.SMALL)) {
 
             @Override
             public String getValue(Employee employee) {
@@ -166,8 +161,7 @@ public class EmployeeListPanel implements IsElement {
             }
         };
         deleteColumn.setFieldUpdater((index, employee, value) -> {
-            EmployeeRestServiceBuilder.removeEmployee(tenantId, employee.getId(), new FailureShownRestCallback<
-                    Boolean>() {
+            EmployeeRestServiceBuilder.removeEmployee(tenantId, employee.getId(), new FailureShownRestCallback<Boolean>() {
 
                 @Override
                 public void onSuccess(Boolean removed) {
@@ -175,8 +169,8 @@ public class EmployeeListPanel implements IsElement {
                 }
             });
         });
-        Column<Employee, String> editColumn = new Column<Employee, String>(new ButtonCell(IconType.EDIT,
-                ButtonType.DEFAULT, ButtonSize.SMALL)) {
+        Column<Employee, String> editColumn = new Column<Employee, String>(
+                new ButtonCell(IconType.EDIT, ButtonType.DEFAULT, ButtonSize.SMALL)) {
 
             @Override
             public String getValue(Employee employee) {

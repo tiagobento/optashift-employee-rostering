@@ -1,11 +1,10 @@
 package org.optaplanner.openshift.employeerostering.shared.lang.tokens;
 
+import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
+import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeAvailabilityState;
 import org.optaplanner.openshift.employeerostering.shared.lang.parser.DateMatcher;
 
 import javax.persistence.Entity;
-
-import org.optaplanner.openshift.employeerostering.shared.common.AbstractPersistable;
-import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeAvailabilityState;
 
 /**
  * Describes date related changes to {@link EmployeeAvailabilityState} and when they should happen.<br>
@@ -40,6 +39,7 @@ public class EmployeeConditional extends AbstractPersistable {
 
     /**
      * Getter for {@link EmployeeConditional#condition}
+     *
      * @return Value of {@link EmployeeConditional#condition}
      */
     public String getCondition() {
@@ -48,7 +48,7 @@ public class EmployeeConditional extends AbstractPersistable {
 
     /**
      * Setter for {@link EmployeeConditional#condition}
-     * 
+     *
      * @param condition Value to set {@link EmployeeConditional#condition} to
      */
     public void setCondition(String condition) {
@@ -57,6 +57,7 @@ public class EmployeeConditional extends AbstractPersistable {
 
     /**
      * Getter for {@link EmployeeConditional#avaliability}
+     *
      * @return Value of {@link EmployeeConditional#avaliability}
      */
     public EmployeeAvailabilityState getAvaliability() {
@@ -65,7 +66,7 @@ public class EmployeeConditional extends AbstractPersistable {
 
     /**
      * Setter for {@link EmployeeConditional#avaliability}
-     * 
+     *
      * @param avaliability Value to set {@link EmployeeConditional#avaliability} to
      */
     public void setAvaliability(EmployeeAvailabilityState avaliability) {
