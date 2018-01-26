@@ -71,7 +71,7 @@
   <modules>
     <module>optashift-employee-rostering-shared</module>
     <module>optashift-employee-rostering-shared-gwt</module>
-    <module>optashift-employee-rostering-gwtui</module>
+    <module>optashift-employee-rostering-client</module>
     <module>optashift-employee-rostering-server</module>
     <module>optashift-employee-rostering-webapp</module>
     <module>optashift-employee-rostering-benchmark</module>
@@ -100,7 +100,7 @@
       </dependency>
       <dependency>
         <groupId>org.optaplanner.openshift</groupId>
-        <artifactId>optashift-employee-rostering-gwtui</artifactId>
+        <artifactId>optashift-employee-rostering-client</artifactId>
         <type>war</type>
         <version>${project.version}</version>
       </dependency>

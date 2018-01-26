@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
       <groupId>org.optaplanner.openshift</groupId>
-      <artifactId>optashift-employee-rostering-gwtui</artifactId>
+      <artifactId>optashift-employee-rostering-client</artifactId>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
