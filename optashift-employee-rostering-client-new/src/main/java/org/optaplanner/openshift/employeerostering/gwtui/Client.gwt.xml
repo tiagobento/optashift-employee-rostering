@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE module PUBLIC
+        "-//Google Inc.//DTD Google Web Toolkit 2.8.0//EN"
+        "http://www.gwtproject.org/doctype/2.8.2/gwt-module.dtd">
+
+<module rename-to="app">
+
+    <inherits name="com.google.gwt.i18n.I18N"/>
+    <inherits name="com.google.gwt.resources.Resources" />
+
+    <inherits name="org.jboss.errai.ioc.Container"/>
+    <inherits name="org.jboss.errai.enterprise.CDI"/>
+    <inherits name="org.jboss.errai.ui.UI"/>
+
+</module>
