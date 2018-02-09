@@ -13,6 +13,8 @@ import org.optaplanner.openshift.employeerostering.gwtui.client.app.NavigationCo
 import org.optaplanner.openshift.employeerostering.gwtui.client.app.NavigationController.PageChange;
 import org.optaplanner.openshift.employeerostering.gwtui.client.tenant.TenantStore;
 
+import static org.optaplanner.openshift.employeerostering.gwtui.client.pages.Pages.Id.SKILLS;
+import static org.optaplanner.openshift.employeerostering.gwtui.client.pages.Pages.Id.SPOT_ROSTER;
 import static org.optaplanner.openshift.employeerostering.gwtui.client.pages.Pages.Id.SPOT_ROSTER_DEMO;
 
 @EntryPoint
