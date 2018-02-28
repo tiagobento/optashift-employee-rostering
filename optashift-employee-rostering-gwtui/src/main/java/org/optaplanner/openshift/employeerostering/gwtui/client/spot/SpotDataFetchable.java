@@ -20,6 +20,7 @@ import org.optaplanner.openshift.employeerostering.gwtui.client.interfaces.Updat
 import org.optaplanner.openshift.employeerostering.gwtui.client.popups.ErrorPopup;
 import org.optaplanner.openshift.employeerostering.gwtui.client.popups.LoadingPopup;
 import org.optaplanner.openshift.employeerostering.gwtui.client.roster.RosterUpdateEvent;
+import org.optaplanner.openshift.employeerostering.shared.roster.Pagination;
 import org.optaplanner.openshift.employeerostering.shared.roster.view.EmployeeRosterView;
 import org.optaplanner.openshift.employeerostering.shared.roster.view.SpotRosterView;
 import org.optaplanner.openshift.employeerostering.shared.shift.Shift;
@@ -58,7 +59,7 @@ public class SpotDataFetchable implements Fetchable<Collection<SpotData>> {
             Integer tenantId = tenantIdProvider.get();
             if (null == last || null == calendar || !last.getTenantId().equals(tenantId)) {
                 LoadingPopup.setLoading(LOADING_STRING);
-                RosterRestServiceBuilder.getCurrentSpotRosterView(tenantId, new FailureShownRestCallback<
+                RosterRestServiceBuilder.getCurrentSpotRosterView(tenantId, 0, Integer.MAX_VALUE, new FailureShownRestCallback<
                         SpotRosterView>() {
 
                     @Override
