@@ -29,6 +29,7 @@ import org.optaplanner.openshift.employeerostering.gwtui.client.popups.FormPopup
 import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeAvailabilityState;
 import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeRestServiceBuilder;
 import org.optaplanner.openshift.employeerostering.shared.employee.view.EmployeeAvailabilityView;
+import org.optaplanner.openshift.employeerostering.shared.shift.Shift;
 import org.optaplanner.openshift.employeerostering.shared.shift.ShiftRestServiceBuilder;
 import org.optaplanner.openshift.employeerostering.shared.shift.view.ShiftView;
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
@@ -199,16 +200,16 @@ public class EmployeeShiftEditForm implements IsElement {
                             ShiftView oldShift = new ShiftView(employee.getData().getShift());
 
                             ShiftRestServiceBuilder.updateShift(employee.getData().getShift().getTenantId(), oldShift,
-                                    new FailureShownRestCallback<Void>() {
+                                    new FailureShownRestCallback<Shift>() {
 
                                         @Override
-                                        public void onSuccess(Void result) {
+                                        public void onSuccess(Shift result) {
                                             ShiftRestServiceBuilder.updateShift(employee.getData().getShift()
                                                     .getTenantId(),
-                                                    shift, new FailureShownRestCallback<Void>() {
+                                                    shift, new FailureShownRestCallback<Shift>() {
 
                                                         @Override
-                                                        public void onSuccess(Void result2) {
+                                                        public void onSuccess(Shift result2) {
                                                             employee.getCalendarView().getCalendar().forceUpdate();
                                                         }
 
@@ -218,10 +219,10 @@ public class EmployeeShiftEditForm implements IsElement {
                                     });
                         } else {
                             ShiftRestServiceBuilder.updateShift(employee.getData().getShift().getTenantId(), shift,
-                                    new FailureShownRestCallback<Void>() {
+                                    new FailureShownRestCallback<Shift>() {
 
                                         @Override
-                                        public void onSuccess(Void result) {
+                                        public void onSuccess(Shift result) {
                                             employee.getCalendarView().getCalendar().forceUpdate();
                                         }
                                     });
@@ -238,10 +239,10 @@ public class EmployeeShiftEditForm implements IsElement {
             ShiftView shiftView = new ShiftView(employee.getData().getShift());
             popup.hide();
             ShiftRestServiceBuilder.updateShift(employee.getData().getShift().getTenantId(), shiftView,
-                    new FailureShownRestCallback<Void>() {
+                    new FailureShownRestCallback<Shift>() {
 
                         @Override
-                        public void onSuccess(Void result) {
+                        public void onSuccess(Shift result) {
                             employee.getCalendarView().getCalendar().forceUpdate();
                         }
 

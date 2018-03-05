@@ -32,6 +32,7 @@ import org.optaplanner.openshift.employeerostering.shared.employee.Employee;
 import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeAvailabilityState;
 import org.optaplanner.openshift.employeerostering.shared.employee.EmployeeRestServiceBuilder;
 import org.optaplanner.openshift.employeerostering.shared.employee.view.EmployeeAvailabilityView;
+import org.optaplanner.openshift.employeerostering.shared.shift.Shift;
 import org.optaplanner.openshift.employeerostering.shared.shift.ShiftRestServiceBuilder;
 import org.optaplanner.openshift.employeerostering.shared.shift.view.ShiftView;
 import org.optaplanner.openshift.employeerostering.shared.spot.Spot;
@@ -130,10 +131,10 @@ public class SpotShiftEditForm implements IsElement {
             ShiftView shiftView = new ShiftView(spot.getData().getShift());
             popup.hide();
             ShiftRestServiceBuilder.updateShift(spot.getData().getShift().getTenantId(), shiftView,
-                    new FailureShownRestCallback<Void>() {
+                    new FailureShownRestCallback<Shift>() {
 
                         @Override
-                        public void onSuccess(Void result) {
+                        public void onSuccess(Shift result) {
                             spot.getCalendarView().getCalendar().forceUpdate();
                         }
 
@@ -143,10 +144,10 @@ public class SpotShiftEditForm implements IsElement {
             ShiftView shiftView = new ShiftView(spot.getData().getShift());
             popup.hide();
             ShiftRestServiceBuilder.updateShift(spot.getData().getShift().getTenantId(), shiftView,
-                    new FailureShownRestCallback<Void>() {
+                    new FailureShownRestCallback<Shift>() {
 
                         @Override
-                        public void onSuccess(Void result) {
+                        public void onSuccess(Shift result) {
                             spot.getCalendarView().getCalendar().forceUpdate();
                         }
 
